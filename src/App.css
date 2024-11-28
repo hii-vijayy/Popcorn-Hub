@@ -1,0 +1,546 @@
+/* Body Styling */
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  background-color: #000000; /* Changed to a lighter background */
+}
+
+/* Navbar Style */
+.navbar {
+  display: flex;
+  flex-direction: column; /* Stack brand and items vertically */
+  align-items: center; /* Center items horizontally */
+  padding: 10px 20px;
+  background-color:  #000000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: relative; /* Position container for absolute positioning of the toggle */
+}
+
+/* Navbar Brand */
+.navbar-brand {
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  margin:20px 0;
+}
+
+.navbar-home-tag{
+  text-decoration: none;
+  color: white;
+}
+
+/* Search Bar Style */
+.container {
+  width: 100%; /* Limit max width for better layout */
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  margin-top: 30px;
+  gap: 10px; /* Adjust gap for better spacing */
+}
+
+.inputbox {
+  width: 700px; /* Adjusted width for better visibility */
+  height: 50px;
+  color: white;
+  font-size: 19px;
+  background-color: #373535; /* Changed to pure white for better contrast */
+  border-radius: 25px;
+  border: 1px solid #525252; /* Added border for visibility */
+  padding: 0 15px; /* Added padding for better text placement */
+}
+
+.buttonCls {
+  width: 200px;
+  height: 50px;
+}
+
+.button {
+  width: 100%;
+  height: 100%;
+  font-size: 20px;
+  background-color: #1faf5b;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Suggestions */
+.suggestions {
+  color: rgb(255, 255, 255);
+  background-color: #373535;
+  border-radius: 5px;
+  font-size: 17px;
+  list-style: none;
+  margin-top: 20px;
+  cursor: pointer;
+  padding: 15px 20px;
+  line-height: 1.7;
+}
+
+/* Section Styling */
+.Heading {
+  color: #333; /* Changed to a darker color for better contrast */
+  font-size: 25px;
+  margin-top: 40px;
+  text-align: center; /* Center the section heading */
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap; /* Allow cards to wrap to the next line */
+  justify-content:space-between; /* Evenly distribute cards */
+  overflow-x: auto; /* Allow horizontal scrolling if needed */
+  padding: 10px;
+  gap: 20px; /* Space between cards */
+  max-width: 90%; /* Limit max width for better layout */
+  margin-top: 20px; /* Space above content */
+}
+
+.movie-card {
+  max-width: 300px; /* Maximum width of the card */
+  background-color: rgb(0, 0, 0);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s; /* Added box-shadow transition */
+  text-align: center;
+  flex: 1 1 calc(25% - 20px); /* Allow for 4 cards in a row with spacing */
+  /* Removed margin here to use gap instead */
+}
+
+.movie-card:hover {
+  transform: translateY(-5px); /* Slight lift effect on hover */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.movie-image {
+  width: 100%; /* Changed to 100% for responsive design */
+  height: auto; /* Changed to auto for responsive design */
+  object-fit: cover; 
+}
+
+.movie-name {
+  padding: 10px;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.section-heading {
+  color: white;
+  margin-top: 40px;
+  font-size: 25px;
+  text-align: center; /* Center the section heading */
+}
+
+/* Footer Styling */
+
+/* Footer Styling */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 7px;
+}
+
+.footer-brand {
+  font-size: 17px;
+  color: white;
+  text-align: right;
+}
+
+.social-links {
+  display: flex;
+  gap: 20px;
+}
+
+.social-links a {
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.social-links a:hover {
+  color: #ffe600;
+}
+
+/* Pagination Styling */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  background-color: #000000;
+  padding: 10px 0;
+  margin-top: auto; /* Push pagination to the bottom */
+}
+
+/* Pagination Button Styling */
+.prev-btn, .next-btn {
+  width: 350px; /* Set a fixed width for the buttons */
+  height: 50px;
+  font-size: 20px;
+  background-color: #000000;
+  color: rgb(151, 51, 51);
+  border: 1px solid #fff;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.prev-btn:hover, .next-btn:hover {
+  background-color: #000000; /* Darker shade on hover */
+}
+
+
+/* Modal Overlay */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(53, 52, 52, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  overflow-y: auto; /* Allows scrolling if content overflows */
+  padding: 20px; /* Adds some spacing for smaller screens */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  width: 95%; /* Makes the modal width responsive */
+  max-width: 500px; /* Limits maximum width for larger screens */
+  max-height: 90vh; /* Ensures modal does not exceed the viewport height */
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+  overflow-y: auto; /* Adds scrolling if content overflows vertically */
+}
+
+/* Modal Movie Image */
+.modal-movie-image {
+  width: 100%; /* Ensures it spans the available width */
+  max-width: 350px; /* Limits the width for smaller modals */
+  height: auto; /* Maintains aspect ratio */
+  display: block; /* Centers the image */
+  margin: 0 auto 15px; /* Centers the image horizontally with spacing */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Adjust iframe size for trailer */
+.modal iframe {
+  width: 100%;
+  height: 315px; /* Consider making this responsive as well */
+  border: none;
+}
+
+
+.description {
+  margin-top: 20px;
+  color: #333;
+  font-weight: 600;
+  text-align: left;
+}
+
+.short-description {
+  text-align: left;
+  margin-top: 15px;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.read-more-text {
+  font-weight: 700;
+}
+
+/* Close Button */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 35px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #000000;
+}
+
+.close:hover {
+  color: red;
+}
+
+.director-heading {
+  font-weight: 600;
+  text-align: left;
+}
+
+.director {
+  display: flex;
+  margin-top: 20px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Adjustments for Smaller Screens */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%; /* Further reduces modal width for small devices */
+    padding: 15px; /* Reduces padding to save space */
+  }
+
+  .close {
+    top: 5px;
+    right: 10px; /* Adjusts close button position */
+  }
+
+  .modal-movie-image {
+    max-width: 250px; /* Reduces image size for smaller screens */
+  }
+
+  /* Adjust the movie card layout for smaller screens */
+  .content {
+    flex-direction: column; /* Stack movie cards vertically on smaller screens */
+    align-items: center; /* Center movie cards */
+  }
+
+  .movie-card {
+    flex: 1 1 100%; /* Full width for movie cards on smaller screens */
+    margin: 10px 0; /* Space between movie cards */
+  }
+
+  /* Adjust button styles for smaller screens */
+  .buttonCls {
+    width: 100%; /* Full width for button on smaller screens */
+  }
+
+  .inputbox {
+    width: 100%; /* Full width on smaller screens */
+    margin-bottom: 10px; /* Space below search bar */
+  }
+}
+
+/* Cast List Styling */
+
+.cast-heading {
+  text-align: left;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.cast-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.cast-list li {
+  font-size: 14px;
+  padding: 5px 0;
+  color: #101010;
+  text-align: left;
+  font-weight: 500;
+}
+
+.cast-list li:before {
+  content: "• ";
+  color: #00aaff;
+}
+
+.rating-btn {
+  background-color: #fff280;
+  border: none;
+  color: #000;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Platform Buttons */
+.platform-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap; /* Allows buttons to wrap if they exceed container width */
+}
+
+.platform-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.platform-btn:hover {
+  transform: scale(1.1);
+}
+
+.platform-logo {
+  width: 20px; /* Adjust size of the logo */
+  height: 20px; /* Ensure logo remains square */
+}
+
+/* Category Button */
+.category-btn {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.category-btn.adult {
+  background-color: red;
+  color: white;
+}
+
+.category-btn.general {
+  background-color: green;
+  color: white;
+}
+
+/* Additional Styles for Responsiveness */
+@media (max-width: 768px) {
+  /* Adjust category button styles for smaller screens */
+  .category-btn {
+    width: 100%; /* Full width for category buttons on smaller screens */
+    margin-bottom: 10px; /* Space below category buttons */
+  }
+}
+
+
+/* Genre Section Styles */
+.main-content {
+  display: flex;
+  flex-grow: 1; /* Take remaining space */
+  margin-top: 30px;
+  gap:70px;
+}
+
+.genre-area {
+  width: 250px;
+  background-color: #000000; /* Optional: Add background color for clarity */
+}
+
+.genre-section{
+  width: 250px;
+  padding: 0 20px;
+}
+
+
+/* Genre Header */
+.genre-section h2 {
+  color: #fff;
+  line-height: 3;
+}
+
+/* Genre Button Styles */
+.genre-btn {
+  padding: 5px 10px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 17px;
+  transition: background-color 0.3s, transform 0.2s;
+  margin: 5px 0;
+  width: 100%;
+}
+
+.genre-btn:hover {
+  background-color:#373535 ;
+  transform: scale(1.05);
+}
+
+/* Genre List Styles */
+.genre-list {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.genre-list li {
+  margin: 5px 0;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  line-height: 2.5;
+}
+
+.genre-list li:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Adjustments for Genre Section */
+@media (max-width: 768px) {
+  .genre-section {
+    width: 100%; /* Full width for smaller screens */
+    margin: 10px 0;
+    height: auto; /* Adjust height to auto on small screens */
+    position: static; /* Remove sticky positioning */
+  }
+
+  .genre-btn {
+    width: 100%; /* Keep buttons full width on smaller screens */
+    margin-bottom: 10px;
+  }
+}
+
+/* Style for the loading screen */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  z-index: 1000; /* Ensure it sits on top of other content */
+  color: white;
+  font-size: 24px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3; /* Light grey border */
+  border-top: 4px solid #3498db; /* Blue color for the spinning part */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+  margin-right: 10px; /* Space between spinner and text */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

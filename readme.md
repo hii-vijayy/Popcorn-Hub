@@ -1,16 +1,22 @@
-# Movie Hub
+Here’s an updated README with the new features and adjustments you’ve made to your movie app:
 
-A React-based movie app that fetches and displays popular movies from Bollywood, Hollywood, and Punjabi cinema. The app allows users to search for movies and view their details by clicking on the movie cards.
+---
 
-<img src="src\assets\moviehub.png" alt="MovieHub Output" />
+# Popcorn Hub
+
+A React-based movie app that fetches and displays popular movies from various genres, including Bollywood, Hollywood, and Punjabi cinema. The app allows users to search for movies, view their details by clicking on movie cards, and navigate through pages of movies with the new pagination feature.
+
+<img src="src\assets\Popcorn-hub.png" alt="MovieHub Output" />
 
 ## Features
 
-- **Movie Sections**: View Bollywood, Hollywood, and Punjabi movies.
-- **Search Functionality**: Search movies by title across all sections.
-- **Infinite Scroll**: Scroll through pages of movies with dynamic content loading.
+- **Movie Sections**: View movies from different genres like Bollywood, Hollywood, Punjabi, and more.
+- **Genre Filtering**: Users can filter movies by specific genres such as Action, Comedy, Drama, etc.
+- **Search Functionality**: Search movies by title across all genres.
+- **Pagination**: Navigate through pages of movie results instead of infinite scroll.
+- **Loading Indicator**: Display a loading spinner when fetching data or during a genre change.
 - **Responsive Design**: Mobile-friendly design that adapts to different screen sizes.
-- **Movie Details**: Click on any movie card to view additional details     .
+- **Movie Details**: Click on any movie card to view additional details like release date, rating, description, etc.
 
 ## Tech Stack
 
@@ -18,6 +24,7 @@ A React-based movie app that fetches and displays popular movies from Bollywood,
 - **API**: The Movie Database (TMDb) API for fetching movie data
 - **State Management**: React's `useState` and `useEffect` hooks
 - **Styling**: Custom CSS for styling components
+- **Routing**: React Router for navigation between different movie sections
 
 ## Setup
 
@@ -58,13 +65,45 @@ A React-based movie app that fetches and displays popular movies from Bollywood,
 ### Run the App
 
 Start the development server:
-    `
- npm run dev
-    `
+
+```bash
+npm run dev
+```
+
+## Genre Feature
+
+- **View Movies by Genre**: Select a genre to view a list of movies. The app supports various genres such as:
+  - Action
+  - Adventure
+  - Comedy
+  - Drama
+  - Horror
+  - Romance
+  - And more...
+
+## Loading Indicator
+
+- **Loading Spinner**: A loading spinner is displayed whenever new movie data is being fetched, such as during a genre change or movie search.
+
+## Pagination
+
+- **Pagination**: The app now uses pagination instead of infinite scroll. Navigate through movie pages using the `Next` and `Previous` buttons. Each page displays a set number of movies, allowing for better control and performance when browsing large lists.
+
+## Movie Card Details
+
+- **Movie Card**: Each movie card displays comprehensive details about the movie, including:
+  - Movie Title
+  - Release Date
+  - Rating
+  - Overview/Description
+  - Poster Image
+  - Cast
+  - Trailer
+  - Platform Availability
+
+Users can click on a movie card to view additional information about the selected movie.
 
 ## Future Features
 
-- **Movie Details Page**: View detailed information about the movie when clicked.
-- **Pagination**: Add buttons for users to navigate through different pages of movie results.
 - **User Authentication**: Option for users to save their favorite movies.
 - **Dark Mode**: Add a dark mode toggle for a better user experience.

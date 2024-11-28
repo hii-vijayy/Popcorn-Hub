@@ -6,7 +6,7 @@ Here’s an updated README with the new features and adjustments you’ve made t
 
 A React-based movie app that fetches and displays popular movies from various genres, including Bollywood, Hollywood, and Punjabi cinema. The app allows users to search for movies, view their details by clicking on movie cards, and navigate through pages of movies with the new pagination feature.
 
-<img src="src\assets\Popcorn-hub.png" alt="MovieHub Output" />
+<img src="src/assets/Popcorn-Hub.png" alt="PopcornHub Output" />
 
 ## Features
 

@@ -51,11 +51,17 @@ body {
   margin-top: 30px;
   gap: 10px; /* Space between the input box and button */
   flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  position: relative; /* Needed for absolute positioning of suggestions */
+}
+
+.searchbar{
+  width: 700px;
+  height: 50px;
 }
 
 .inputbox {
-  width: 700px; /* Default width for larger screens */
-  height: 50px;
+  width: 100%; 
+  height: 100%;
   color: white;
   font-size: 19px;
   background-color: #373535; /* Subtle background */
@@ -63,6 +69,7 @@ body {
   border: 1px solid #525252; /* Visible border */
   padding: 0 15px; /* Padding for comfortable text placement */
   box-sizing: border-box; /* Ensure padding doesn't affect width */
+  position: relative; /* To ensure proper alignment with suggestions */
 }
 
 .buttonCls {
@@ -141,15 +148,25 @@ body {
 
 /* Suggestions */
 .suggestions {
-  color: rgb(255, 255, 255);
+  position: absolute;
+  top: 100%; /* Positions the suggestions just below the input */
+  left: 0;
+  width: 100%;
+  max-height: 250px; /* Limit height */
+  overflow-y: auto;
   background-color: #373535;
-  border-radius: 5px;
-  font-size: 17px;
-  list-style: none;
-  margin-top: 20px;
+  color: #ffffff;
+  list-style-type: none;
+  border-top: none;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensures suggestions are on top */
+  display: block; /* Ensure it's displayed when active */
   cursor: pointer;
-  padding: 15px 20px;
-  line-height: 1.7;
+}
+
+.suggestions li:hover{
+  background-color: #ffffff;
 }
 
 /* Section Styling */

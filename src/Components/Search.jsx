@@ -59,7 +59,7 @@ function Search({ onSearch }) {
 
     return (
         <div className="container">
-            <div className="searchbar">
+            <div className="searchbar" style={{ position: 'relative' }}>
                 <input
                     type="text"
                     placeholder="Enter Movie Name"

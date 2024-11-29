@@ -31,6 +31,17 @@ body {
   color: white;
 }
 
+@media (max-width: 480px) {
+  .navbar-brand {
+    font-size: 20px;
+  }
+
+  .movie-name {
+    font-size: 16px;
+  }
+}
+
+
 /* Search Bar Style */
 .container {
   width: 100%; /* Limit max width for better layout */
@@ -65,6 +76,21 @@ body {
   border-radius: 25px;
   border: none;
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .inputbox {
+    width: 90%; /* Shrink width on smaller screens */
+    margin: 10px auto; /* Center input */
+  }
+
+  .buttonCls {
+    width: 90%;
+  }
+
+  .container {
+    flex-direction: column; /* Stack input and button vertically */
+  }
 }
 
 /* Suggestions */
@@ -117,9 +143,9 @@ body {
 }
 
 .movie-image {
-  width: 100%; /* Changed to 100% for responsive design */
-  height: auto; /* Changed to auto for responsive design */
-  object-fit: cover; 
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 .movie-name {
@@ -133,6 +159,20 @@ body {
   margin-top: 40px;
   font-size: 25px;
   text-align: center; /* Center the section heading */
+}
+
+@media (max-width: 768px) {
+  .movie-card {
+    flex: 1 1 100%; /* Full width for movie cards */
+    max-width: 100%; /* Allow cards to stretch fully */
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-card {
+    flex: 1 1 100%;
+    margin-bottom: 15px; /* Space between cards */
+  }
 }
 
 /* Footer Styling */
@@ -194,6 +234,22 @@ body {
 
 .prev-btn:hover, .next-btn:hover {
   background-color: #000000; /* Darker shade on hover */
+}
+
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .pagination {
+    flex-wrap: wrap; /* Allow buttons to stack */
+  }
+
+  .prev-btn, .next-btn {
+    width: auto; /* Allow buttons to resize dynamically */
+    padding: 10px 20px;
+  }
 }
 
 
@@ -304,8 +360,8 @@ body {
 /* Adjustments for Smaller Screens */
 @media (max-width: 768px) {
   .modal-content {
-    width: 95%; /* Further reduces modal width for small devices */
-    padding: 15px; /* Reduces padding to save space */
+    width: 90%; /* Occupy most of the screen width */
+    max-height: 80vh; /* Prevent excessive height */
   }
 
   .close {
@@ -314,13 +370,14 @@ body {
   }
 
   .modal-movie-image {
-    max-width: 250px; /* Reduces image size for smaller screens */
+    max-width: 100%; /* Adjust to modal width */
+    height: auto;
   }
 
   /* Adjust the movie card layout for smaller screens */
   .content {
-    flex-direction: column; /* Stack movie cards vertically on smaller screens */
-    align-items: center; /* Center movie cards */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center;
   }
 
   .movie-card {
@@ -507,10 +564,13 @@ body {
     height: auto; /* Adjust height to auto on small screens */
     position: static; /* Remove sticky positioning */
   }
+  .genre-area {
+    width: 100%;
+    margin-bottom: 20px;
+  }
 
   .genre-btn {
-    width: 100%; /* Keep buttons full width on smaller screens */
-    margin-bottom: 10px;
+    width: 100%;
   }
 }
 
@@ -544,3 +604,4 @@ body {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+

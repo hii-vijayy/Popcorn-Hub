@@ -27,34 +27,62 @@ function Content({ movies }) {
   // Fetch movie details
   const fetchMovieDetails = async (movieId) => {
     try {
+      // Make API calls in parallel
       const [castResponse, trailerResponse, platformResponse] = await Promise.all([
         fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${apiKey}`),
         fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${apiKey}`),
         fetch(`https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${apiKey}`),
       ]);
-
-      const castData = await castResponse.json();
-      const trailerData = await trailerResponse.json();
-      const platformData = await platformResponse.json();
-
+  
+      // Check if all responses are successful
+      if (!castResponse.ok || !trailerResponse.ok || !platformResponse.ok) {
+        throw new Error(
+          `Failed to fetch one or more resources: 
+           Cast: ${castResponse.status}, 
+           Trailer: ${trailerResponse.status}, 
+           Platforms: ${platformResponse.status}`
+        );
+      }
+  
+      // Parse the JSON responses
+      const [castData, trailerData, platformData] = await Promise.all([
+        castResponse.json(),
+        trailerResponse.json(),
+        platformResponse.json(),
+      ]);
+  
+      // Extract director information
       const directorData = castData.crew.find((member) => member.job === "Director");
-
+  
+      // Find the trailer video
       const trailer = trailerData.results.find(
         (video) => video.type === "Trailer" && video.site === "YouTube"
       );
-
+  
+      // Get platform availability (specific to India as an example)
       const countryPlatforms = platformData.results?.IN?.flatrate || [];
-
+  
+      // Update movie details state
       setMovieDetails({
-        cast: castData.cast.slice(0, 10),
+        cast: castData.cast.slice(0, 15), // Limit cast to top 10
         director: directorData ? directorData.name : "Not Available",
         trailerUrl: trailer ? `https://www.youtube.com/embed/${trailer.key}` : "",
         platforms: countryPlatforms,
       });
     } catch (error) {
+      // Log the error with detailed information
       console.error("Error fetching movie details:", error);
+  
+      // Set fallback data to prevent UI breaking
+      setMovieDetails({
+        cast: [],
+        director: "Unavailable",
+        trailerUrl: "",
+        platforms: [],
+      });
     }
   };
+  
 
   const handleMovieClick = (movie) => {
     setSelectedMovie(movie);
@@ -117,8 +145,8 @@ function Content({ movies }) {
             <p>
               <strong>Release Date:</strong> {selectedMovie.release_date || "N/A"}
             </p>
-            <p>
-              <strong>Category:</strong>
+            <div>
+              <strong>Category:</strong>{" "}
               <button
                 className={`category-btn ${
                   selectedMovie.adult ? "adult" : "general"
@@ -126,40 +154,31 @@ function Content({ movies }) {
               >
                 {selectedMovie.adult ? "A (Adult)" : "U/A (General)"}
               </button>
-            </p>
-            {selectedMovie.adult === false && selectedMovie.release_dates?.results?.US?.certification && (
-              <p>
-                <strong>Rating:</strong> {selectedMovie.release_dates.results.US.certification}
-              </p>
-            )}
+            </div>
             {selectedMovie.vote_average && (
-              <p>
+              <div>
                 <strong>Rating:</strong>{" "}
                 <button className="rating-btn">
                   ⭐ {selectedMovie.vote_average.toFixed(1)} / 10
                 </button>
-              </p>
+              </div>
             )}
             {selectedMovie.overview && (
               <div className="description">
-                <div>Description:</div>
+                <strong>Description:</strong>
                 <div className="short-description">
                   {isDescriptionExpanded
                     ? selectedMovie.overview
-                    : selectedMovie.overview.slice(0, 150) + "..."}
+                    : `${selectedMovie.overview.slice(0, 150)}...`}
                   <span className="read-more-text" onClick={toggleDescription}>
                     {isDescriptionExpanded ? "Read Less" : "Read More"}
                   </span>
                 </div>
               </div>
             )}
-            <p>
-              <div className="director">
-                <div className="director-heading">Director:</div>
-                {movieDetails.director}
-              </div>
-              
-            </p>
+            <div>
+              <strong>Director:</strong> {movieDetails.director}
+            </div>
             <div className="cast-heading">Cast:</div>
             <ul className="cast-list">
               {movieDetails.cast.length > 0 ? (

@@ -7,41 +7,6 @@ body {
   background-color: #000000; /* Changed to a lighter background */
 }
 
-/* Navbar Style */
-.navbar {
-  display: flex;
-  flex-direction: column; /* Stack brand and items vertically */
-  align-items: center; /* Center items horizontally */
-  padding: 10px 20px;
-  background-color:  #000000;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  position: relative; /* Position container for absolute positioning of the toggle */
-}
-
-/* Navbar Brand */
-.navbar-brand {
-  font-size: 30px;
-  font-weight: bold;
-  color: white;
-  margin:20px 0;
-}
-
-.navbar-home-tag{
-  text-decoration: none;
-  color: white;
-}
-
-@media (max-width: 480px) {
-  .navbar-brand {
-    font-size: 20px;
-  }
-
-  .movie-name {
-    font-size: 16px;
-  }
-}
-
-
 /* Search Bar Style */
 .container {
   width: 100%; /* Full width for the container */
@@ -241,39 +206,6 @@ body {
     flex: 1 1 100%; /* One card per row */
     margin-bottom: 15px; /* Space between cards */
   }
-}
-
-
-/* Footer Styling */
-
-/* Footer Styling */
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 7px 7px;
-}
-
-.footer-brand {
-  font-size: 17px;
-  color: white;
-  text-align: right;
-}
-
-.social-links {
-  display: flex;
-  gap: 20px;
-}
-
-.social-links a {
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.social-links a:hover {
-  color: #ffe600;
 }
 
 /* Pagination Styling */

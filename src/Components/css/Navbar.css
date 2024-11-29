@@ -1,0 +1,52 @@
+/* Navbar Container */
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    position: relative;
+  }
+  
+  /* Navbar Content (Logo + Text) */
+  .navbar-content {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between logo and text */
+  }
+  
+  /* Navbar Logo */
+  .navbar-logo {
+    height: 80px; /* Adjust height to match text size */
+    width: auto; /* Maintain aspect ratio */
+  }
+  
+  /* Navbar Text */
+  .navbar-text {
+    font-size: 40px;
+    font-weight: bold;
+    color: #ecf0f1; /* Light text color */
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+  }
+  .navbar-brand {
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+    margin:20px 0;
+  }
+  
+  .navbar-home-tag{
+    text-decoration: none;
+    color: white;
+  }
+  
+  @media (max-width: 480px) {
+    .navbar-brand {
+      font-size: 20px;
+    }
+  
+    .movie-name {
+      font-size: 16px;
+    }
+  }
+  

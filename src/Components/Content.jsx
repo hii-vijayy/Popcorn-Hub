@@ -11,6 +11,7 @@ function Content({ movies }) {
     platforms: [],
   });
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
   const apiKey = import.meta.env.VITE_IMDB_APP_API_KEY;
 
   // Reset state function
@@ -27,53 +28,36 @@ function Content({ movies }) {
   // Fetch movie details
   const fetchMovieDetails = async (movieId) => {
     try {
-      // Make API calls in parallel
       const [castResponse, trailerResponse, platformResponse] = await Promise.all([
         fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${apiKey}`),
         fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${apiKey}`),
         fetch(`https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${apiKey}`),
       ]);
-  
-      // Check if all responses are successful
+
       if (!castResponse.ok || !trailerResponse.ok || !platformResponse.ok) {
-        throw new Error(
-          `Failed to fetch one or more resources: 
-           Cast: ${castResponse.status}, 
-           Trailer: ${trailerResponse.status}, 
-           Platforms: ${platformResponse.status}`
-        );
+        throw new Error("Failed to fetch one or more resources.");
       }
-  
-      // Parse the JSON responses
+
       const [castData, trailerData, platformData] = await Promise.all([
         castResponse.json(),
         trailerResponse.json(),
         platformResponse.json(),
       ]);
-  
-      // Extract director information
+
       const directorData = castData.crew.find((member) => member.job === "Director");
-  
-      // Find the trailer video
       const trailer = trailerData.results.find(
         (video) => video.type === "Trailer" && video.site === "YouTube"
       );
-  
-      // Get platform availability (specific to India as an example)
       const countryPlatforms = platformData.results?.IN?.flatrate || [];
-  
-      // Update movie details state
+
       setMovieDetails({
-        cast: castData.cast.slice(0, 15), // Limit cast to top 10
+        cast: castData.cast.slice(0, 15),
         director: directorData ? directorData.name : "Not Available",
         trailerUrl: trailer ? `https://www.youtube.com/embed/${trailer.key}` : "",
         platforms: countryPlatforms,
       });
     } catch (error) {
-      // Log the error with detailed information
       console.error("Error fetching movie details:", error);
-  
-      // Set fallback data to prevent UI breaking
       setMovieDetails({
         cast: [],
         director: "Unavailable",
@@ -82,7 +66,6 @@ function Content({ movies }) {
       });
     }
   };
-  
 
   const handleMovieClick = (movie) => {
     setSelectedMovie(movie);
@@ -99,11 +82,25 @@ function Content({ movies }) {
     setIsDescriptionExpanded((prev) => !prev);
   };
 
+  // Detect mobile view
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 768); // Mobile view if width <= 768px
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Limit movies to 7 for mobile view
+  const displayedMovies = isMobileView ? movies.slice(0, 7) : movies;
+
   return (
     <>
       <div className="content">
-        {movies.length > 0 ? (
-          movies.map((movie) => (
+        {displayedMovies.length > 0 ? (
+          displayedMovies.map((movie) => (
             <div
               className="movie-card"
               key={movie.id}
@@ -194,36 +191,29 @@ function Content({ movies }) {
             <h3>Platform Availability:</h3>
             <div className="platform-buttons">
               {movieDetails.platforms.length > 0 ? (
-                movieDetails.platforms.map((platform) => {
-                  let buttonColor = "#ccc";
-                  switch (platform.provider_name.toLowerCase()) {
-                    case "netflix":
-                      buttonColor = "#e50914";
-                      break;
-                    case "prime video":
-                      buttonColor = "#00a8e1";
-                      break;
-                    case "hotstar":
-                      buttonColor = "#1b74e4";
-                      break;
-                    default:
-                      buttonColor = "#ccc";
-                  }
-                  return (
-                    <button
-                      key={platform.provider_id}
-                      className="platform-btn"
-                      style={{ backgroundColor: buttonColor }}
-                    >
-                      <img
-                        src={`https://image.tmdb.org/t/p/w92${platform.logo_path}`}
-                        alt={platform.provider_name}
-                        className="platform-logo"
-                      />
-                      {platform.provider_name}
-                    </button>
-                  );
-                })
+                movieDetails.platforms.map((platform) => (
+                  <button
+                    key={platform.provider_id}
+                    className="platform-btn"
+                    style={{
+                      backgroundColor:
+                        platform.provider_name.toLowerCase() === "netflix"
+                          ? "#e50914"
+                          : platform.provider_name.toLowerCase() === "prime video"
+                          ? "#00a8e1"
+                          : platform.provider_name.toLowerCase() === "hotstar"
+                          ? "#1b74e4"
+                          : "#ccc",
+                    }}
+                  >
+                    <img
+                      src={`https://image.tmdb.org/t/p/w92${platform.logo_path}`}
+                      alt={platform.provider_name}
+                      className="platform-logo"
+                    />
+                    {platform.provider_name}
+                  </button>
+                ))
               ) : (
                 <p>No platform information available.</p>
               )}

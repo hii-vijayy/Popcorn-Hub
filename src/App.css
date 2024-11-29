@@ -44,23 +44,25 @@ body {
 
 /* Search Bar Style */
 .container {
-  width: 100%; /* Limit max width for better layout */
+  width: 100%; /* Full width for the container */
   display: flex;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
   margin-top: 30px;
-  gap: 10px; /* Adjust gap for better spacing */
+  gap: 10px; /* Space between the input box and button */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 .inputbox {
-  width: 700px; /* Adjusted width for better visibility */
+  width: 700px; /* Default width for larger screens */
   height: 50px;
   color: white;
   font-size: 19px;
-  background-color: #373535; /* Changed to pure white for better contrast */
+  background-color: #373535; /* Subtle background */
   border-radius: 25px;
-  border: 1px solid #525252; /* Added border for visibility */
-  padding: 0 15px; /* Added padding for better text placement */
+  border: 1px solid #525252; /* Visible border */
+  padding: 0 15px; /* Padding for comfortable text placement */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
 }
 
 .buttonCls {
@@ -72,26 +74,70 @@ body {
   width: 100%;
   height: 100%;
   font-size: 20px;
-  background-color: #1faf5b;
+  background-color: #1faf5b; /* Green background for the button */
   border-radius: 25px;
   border: none;
   cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth hover effect */
 }
 
+.button:hover {
+  background-color: #16a34a; /* Slightly darker shade on hover */
+}
+
+/* Responsive styles for tablets */
 @media (max-width: 768px) {
+
+  .searchbar{
+    width: 100%;
+    margin: 0 auto;
+  }
   .inputbox {
-    width: 90%; /* Shrink width on smaller screens */
-    margin: 10px auto; /* Center input */
+    width: 100%; /* Make the input box full-width */
+    margin: 10px auto; /* Center the input box */
   }
 
   .buttonCls {
-    width: 90%;
+    width: 100%; /* Make the button full-width */
+    margin: 0 auto; /* Center the button */
+  }
+
+  .container {
+    flex-direction: row; /* Maintain row layout */
+    gap: 15px; /* Adjust gap for better spacing */
+  }
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 480px) {
+  .searchbar{
+    width: 100%;
+  }
+  .inputbox {
+    width: 100%; /* Full width for smaller screens */
+    font-size: 16px; /* Reduce font size */
+    height: 45px; /* Adjust height */
+    border-radius: 20px; /* Smaller radius for harmony */
+  }
+
+  .buttonCls {
+    width: 100%; /* Button matches input width */
+    height: 45px; /* Adjust height to match input */
+  }
+
+  .button {
+    font-size: 18px; /* Adjust font size */
+    border-radius: 20px; /* Smaller radius for consistency */
   }
 
   .container {
     flex-direction: column; /* Stack input and button vertically */
+    align-items: center; /* Center align items */
+    gap: 10px; /* Space between stacked elements */
   }
 }
+
+
 
 /* Suggestions */
 .suggestions {
@@ -117,41 +163,45 @@ body {
 .content {
   display: flex;
   flex-wrap: wrap; /* Allow cards to wrap to the next line */
-  justify-content:space-between; /* Evenly distribute cards */
+  justify-content: space-between; /* Evenly distribute cards */
   overflow-x: auto; /* Allow horizontal scrolling if needed */
   padding: 10px;
   gap: 20px; /* Space between cards */
   max-width: 90%; /* Limit max width for better layout */
   margin-top: 20px; /* Space above content */
+  margin-left: auto;
+  margin-right: auto; /* Center the content container */
 }
 
 .movie-card {
   max-width: 300px; /* Maximum width of the card */
-  background-color: rgb(0, 0, 0);
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: rgb(0, 0, 0); /* Card background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s; /* Added box-shadow transition */
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth hover effects */
   text-align: center;
-  flex: 1 1 calc(25% - 20px); /* Allow for 4 cards in a row with spacing */
-  /* Removed margin here to use gap instead */
+  flex: 1 1 calc(25% - 20px); /* Four cards per row */
 }
 
 .movie-card:hover {
-  transform: translateY(-5px); /* Slight lift effect on hover */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+  transform: translateY(-5px); /* Slight lift effect */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
 }
 
 .movie-image {
   width: 100%;
   height: auto;
   object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px; /* Rounded corners for images */
 }
 
 .movie-name {
   padding: 10px;
   font-size: 18px;
   color: #ffffff;
+  text-align: center; /* Center-align the movie name */
 }
 
 .section-heading {
@@ -161,19 +211,21 @@ body {
   text-align: center; /* Center the section heading */
 }
 
-@media (max-width: 768px) {
-  .movie-card {
-    flex: 1 1 100%; /* Full width for movie cards */
-    max-width: 100%; /* Allow cards to stretch fully */
+/* Adjustments for tablets */
+  @media (max-width: 768px) {
+    .movie-card {
+      flex: 1 1 calc(50% - 20px); /* Two cards per row for tablets */
+    }
   }
-}
 
+/* Adjustments for mobile devices */
 @media (max-width: 480px) {
   .movie-card {
-    flex: 1 1 100%;
+    flex: 1 1 100%; /* One card per row */
     margin-bottom: 15px; /* Space between cards */
   }
 }
+
 
 /* Footer Styling */
 
@@ -372,17 +424,6 @@ body {
   .modal-movie-image {
     max-width: 100%; /* Adjust to modal width */
     height: auto;
-  }
-
-  /* Adjust the movie card layout for smaller screens */
-  .content {
-    flex-direction: column; /* Stack items vertically */
-    align-items: center;
-  }
-
-  .movie-card {
-    flex: 1 1 100%; /* Full width for movie cards on smaller screens */
-    margin: 10px 0; /* Space between movie cards */
   }
 
   /* Adjust button styles for smaller screens */

@@ -1,14 +1,16 @@
-import { Link } from 'react-router-dom';
+import React from "react";
+import "../Components/css/Navbar.css";
+import logo from "../assets/popcornhublogo.png";
 
-function NavBar({ clearSearch}) {
-    return (
-        <div className="navbar">
-            {/* Navbar Brand */}
-            <div className="navbar-brand">
-                <a href="/" className='navbar-home-tag'>Popcorn Hub</a>
-            </div>
-        </div>
-    );
-}
+const Navbar = () => {
+  return (
+    <div className="navbar">
+      <div className="navbar-content">
+        <img src={logo} alt="Popcorn Hub Logo" className="navbar-logo" />
+        <span className="navbar-text">POPCORN HUB</span>
+      </div>
+    </div>
+  );
+};
 
-export default NavBar;
+export default Navbar;

@@ -6,8 +6,8 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="navbar-content">
-        <img src={logo} alt="Popcorn Hub Logo" className="navbar-logo" />
-        <span className="navbar-text">POPCORN HUB</span>
+        <img src={logo} alt="Popcorn Hub Logo" className="PopcornHub-logo" />
+        <a href="/" className='navbar-text'>POPCORN HUB</a>
       </div>
     </div>
   );

@@ -7,6 +7,48 @@ body {
   background-color: #000000; /* Changed to a lighter background */
 }
 
+/* Navbar Style */
+.navbar {
+  display: flex;
+  flex-direction: column; /* Stack brand and items vertically */
+  align-items: center; /* Center items horizontally */
+  padding: 10px 20px;
+  background-color:  #000000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: relative; /* Position container for absolute positioning of the toggle */
+}
+
+/* Navbar Brand */
+.navbar-brand {
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  margin:20px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-home-tag{
+  text-decoration: none;
+  color: white;
+}
+
+.logo{
+  width: 50px;
+  height: 50px;
+}
+
+@media (max-width: 480px) {
+  .navbar-brand {
+    font-size: 20px;
+  }
+
+  .movie-name {
+    font-size: 16px;
+  }
+}
+
 /* Search Bar Style */
 .container {
   width: 100%; /* Full width for the container */
@@ -62,7 +104,9 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7); /* Deeper shadow on hover */
   transform: translateY(-3px); /* Slightly raised hover effect */
   color: #ffaf10; /* Bright yellow text on hover for contrast */
+  color: #e5f010; /* Bright yellow text on hover for contrast */
 }
+
 
 /* Responsive styles for tablets */
 @media (max-width: 768px) {
@@ -208,6 +252,13 @@ body {
   text-align: center; /* Center-align the movie name */
 }
 
+.movie-genres {
+  font-size: 0.9em;
+  color: #c1c1c1;
+  margin-top: 5px;
+}
+
+
 .section-heading {
   color: white;
   margin-top: 40px;
@@ -230,6 +281,184 @@ body {
   }
 }
 
+/* Footer Styling */
+
+/* Footer Styling */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 7px;
+}
+
+.footer-brand {
+  font-size: 17px;
+  color: white;
+  text-align: right;
+}
+
+.social-links {
+  display: flex;
+  gap: 20px;
+}
+
+.social-links a {
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.social-links a:hover {
+  color: #ffe600;
+}
+
+/* Pagination Styling */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  background-color: #000000;
+  padding: 10px 0;
+  margin-top: auto; /* Push pagination to the bottom */
+}
+
+/* Pagination Button Styling */
+/* Pagination Button Styling */
+.prev-btn, .next-btn {
+  width: 220px; /* Adjusted for a sleek design */
+  height: 50px;
+  font-size: 18px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #1a1a1a, #333333); /* Dark gradient for subtle depth */
+  color: #ffffff; /* Bright yellow for a sharp contrast */
+  border: 2px solid #444444; /* Subtle border to blend with the dark theme */
+  border-radius: 12px; /* Rounded edges */
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Deep shadow for a polished look */
+  transition: all 0.3s ease-in-out; /* Smooth hover transition */
+  text-transform: uppercase; /* Adds emphasis to the text */
+}
+
+.prev-btn:hover, .next-btn:hover {
+  background: linear-gradient(135deg, #333333, #1a1a1a); /* Reverse gradient on hover */
+  color: #e5f010; /* Bright white text for contrast */
+  transform: translateY(-2px) scale(1.03); /* Lift effect for interactivity */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.8); /* Enhanced shadow for hover */
+}
+
+
+
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .pagination {
+    flex-wrap: wrap; /* Allow buttons to stack */
+  }
+
+  .prev-btn, .next-btn {
+    width: auto; /* Allow buttons to resize dynamically */
+    padding: 10px 20px;
+  }
+}
+
+
+/* Modal Overlay */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(53, 52, 52, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  overflow-y: auto; /* Allows scrolling if content overflows */
+  padding: 20px; /* Adds some spacing for smaller screens */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #161515;
+  border-radius: 10px;
+  padding: 20px;
+  width: 95%; /* Makes the modal width responsive */
+  max-width: 500px; /* Limits maximum width for larger screens */
+  max-height: 90vh; /* Ensures modal does not exceed the viewport height */
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+  overflow-y: auto; /* Adds scrolling if content overflows vertically */
+}
+
+/* Modal Movie Image */
+.modal-movie-image {
+  width: 100%; /* Ensures it spans the available width */
+  max-width: 350px; /* Limits the width for smaller modals */
+  height: auto; /* Maintains aspect ratio */
+  display: block; /* Centers the image */
+  margin: 0 auto 15px; /* Centers the image horizontally with spacing */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Adjust iframe size for trailer */
+.modal iframe {
+  width: 100%;
+  height: 315px; /* Consider making this responsive as well */
+  border: none;
+}
+
+
+.short-description {
+  text-align: left;
+  margin-top: 15px;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.read-more-text {
+  font-weight: 700;
+  color: rgb(252, 252, 23);
+}
+
+/* trailer */
+
+.trailer{
+  margin-top: 40px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Close Button */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 35px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.close:hover {
+  color: red;
+}
+
+.director {
+  color: #ffffff;
+  display: flex;
+  margin-top: 20px;
+  gap: 10px;
+}
+
 /* Animation */
 @keyframes fadeIn {
   from {
@@ -245,13 +474,15 @@ body {
 /* Adjustments for Smaller Screens */
 @media (max-width: 768px) {
   .modal-content {
-    width: 90%; /* Occupy most of the screen width */
-    max-height: 80vh; /* Prevent excessive height */
+    display: flex;
+    flex-direction: column;
+    width: 75%; 
+    max-height: 80vh;
   }
 
   .close {
-    top: 5px;
-    right: 10px; /* Adjusts close button position */
+    top: 10px;
+    right: 25px; /* Adjusts close button position */
   }
 
   .modal-movie-image {
@@ -270,12 +501,184 @@ body {
   }
 }
 
+/* Cast List Styling */
+
+.cast-heading {
+  text-align: left;
+  font-weight: 600;
+  margin-top: 30px;
+  color: #ffffff; /* White text for the heading */
+}
+
+.cast {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Two columns for cast members */
+  gap: 10px; /* Space between rows and columns */
+  list-style-type: none;
+  padding: 0;
+  margin: 15px 0 0;
+}
+
+.cas-listt {
+  font-size: 14px;
+  padding: 10px;
+  color: #ffffff; /* White text for readability */
+  text-align: left;
+  font-weight: 500;
+  background-color: #282626; /* Dark background for each cast item */
+  border-radius: 8px; /* Rounded corners for a modern look */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Add subtle shadow for depth */
+  height: 30px; /* Consistent height for all items */
+  display: flex;
+  align-items: center; /* Vertically align content */
+}
+
+/* description */
+.description {
+  margin-top: 20px;
+  color: #ffffff;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* rating */
+.rating{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.rating-heading{
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.rating-btn {
+  background-color: #fff280;
+  border: none;
+  color: #000;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Platform Buttons */
+
+.platform-heading{
+  color: #ffffff;
+  font-weight: 600;
+  margin-top: 30px;
+}
+
+.no-platfrom{
+  color: rgb(252, 252, 23);
+  /* margin-top: 20px; */
+}
+.platform-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap; /* Allows buttons to wrap if they exceed container width */
+  margin-top: 20px;
+  justify-content: center; /* Center-align buttons */
+}
+
+.platform-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.platform-btn:hover {
+  transform: scale(1.1);
+}
+
+.platform-logo {
+  width: 20px; /* Adjust size of the logo */
+  height: 20px; /* Ensure logo remains square */
+}
+
+/* movie title */
+
+.movie-title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 27px;
+}
+
+/* realease data */
+
+.release-date{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  margin-top: 20px;
+}
+
+.release-date-heading{
+  font-weight: 600;
+}
+
+/* Category Button */
+
+.category{
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.category-heading{
+  font-weight: 600;
+} 
+
+.category-btn {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.category-btn.adult {
+  background-color: red;
+  color: white;
+}
+
+.category-btn.general {
+  background-color: green;
+  color: white;
+}
+
 /* Additional Styles for Responsiveness */
 @media (max-width: 768px) {
   /* Adjust category button styles for smaller screens */
   .category-btn {
-    width: 100%; /* Full width for category buttons on smaller screens */
-    margin-bottom: 10px; /* Space below category buttons */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px; /* Full width for category buttons on smaller screens */
+    height: 35px;
+
   }
 }
 
@@ -341,10 +744,6 @@ body {
   line-height: 2.5;
 }
 
-.genre-list li:hover {
-  text-decoration: underline;
-}
-
 /* Responsive Adjustments for Genre Section */
 @media (max-width: 768px) {
   .genre-section {
@@ -394,3 +793,6 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+body.modal-open {
+  overflow: hidden; /* Disable scrolling */
+}

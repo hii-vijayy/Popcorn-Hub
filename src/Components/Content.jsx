@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import "../Components/css/content.css";
+import "../App.css";
 
 // Genre lists
 const movieGenres = [
@@ -199,13 +199,11 @@ const handleMovieClick = (movie) => {
                   ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
                   : "/default-image.png"
               }
+              loading="lazy"
               alt={movie.title || movie.name}
               className="movie-image"
             />
             <h3 className="movie-name">{movie.title || movie.name}</h3>
-            <div className="movie-genres">
-              <p> {getGenreNames(movie.genre_ids || [], isTvShow) || "Unknown Genres"}</p>
-            </div>
           </div>
         ))
       ) : (
@@ -225,6 +223,7 @@ const handleMovieClick = (movie) => {
                 ? `https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`
                 : "/default-image.png"
             }
+            loading="lazy"
             alt={selectedMovie.title || selectedMovie.name}
             className="modal-movie-image"
           />
@@ -286,39 +285,31 @@ const handleMovieClick = (movie) => {
                 )}
           </ul>
 
-          <div className="platforms-section">
-              <h3>Platform Availability:</h3>
-              <div className="platform-buttons">
-                {movieDetails.platforms.length > 0 ? (
-                  movieDetails.platforms.map((platform) => {
-                    const platformColors = {
-                      "netflix": "#e50914",
-                      "prime video": "#00a8e1",
-                      "hotstar": "#1b74e4"
-                    };
-
-                    return (
-                      <button
-                        key={platform.provider_id}
-                        className="platform-btn"
-                        style={{
-                          backgroundColor: platformColors[platform.provider_name.toLowerCase()] || "#ccc"
-                        }}
-                      >
-                        <img
-                          src={`https://image.tmdb.org/t/p/w92${platform.logo_path}`}
-                          alt={platform.provider_name}
-                          className="platform-logo"
-                        />
-                        {platform.provider_name}
-                      </button>
-                    );
-                  })
-                ) : (
-                   <span className="no-platfrom">No platforms available</span>
-                )}
-              </div>
-            </div>
+          <div className="platform-heading">Platform Availability:</div>
+          <div className="platform-buttons">
+            {movieDetails.platforms.length > 0 ? (
+              movieDetails.platforms.map((platform) => (
+                <button
+                  key={platform.provider_id}
+                  className="platform-btn"
+                  style={{
+                    backgroundColor:
+                      platform.provider_name.toLowerCase() === "netflix"
+                        ? "#e50914"
+                        : platform.provider_name.toLowerCase() === "prime video"
+                        ? "#00a8e1"
+                        : platform.provider_name.toLowerCase() === "hotstar"
+                        ? "#1b74e4"
+                        : "#4f4f4f",
+                  }}
+                >
+                  {platform.provider_name}
+                </button>
+              ))
+            ) : (
+              <span className="no-platfrom">No platforms available</span>
+            )}
+          </div>
           {movieDetails.trailerUrl && (
             <div className="trailer">
               <h3>Trailer</h3>

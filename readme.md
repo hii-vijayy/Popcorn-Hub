@@ -1,5 +1,3 @@
-Here’s an updated README with the new features and adjustments you’ve made to your movie app:
-
 ---
 
 # Popcorn Hub

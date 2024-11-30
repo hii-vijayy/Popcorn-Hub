@@ -1,142 +1,176 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import "../App.css";
 import "../Components/css/content.css";
 
-// Centralized configuration
-const CONFIG = {
-  MOBILE_BREAKPOINT: 768,
-  API_BASE_URL: 'https://api.themoviedb.org/3',
-  MAX_CAST_DISPLAY: 15,
-  DESCRIPTION_PREVIEW_LENGTH: 150
-};
+// Genre lists
+const movieGenres = [
+  { id: 28, name: "Action" },
+  { id: 12, name: "Adventure" },
+  { id: 16, name: "Animation" },
+  { id: 35, name: "Comedy" },
+  { id: 80, name: "Crime" },
+  { id: 99, name: "Documentary" },
+  { id: 18, name: "Drama" },
+  { id: 10751, name: "Family" },
+  { id: 14, name: "Fantasy" },
+  { id: 36, name: "History" },
+  { id: 27, name: "Horror" },
+  { id: 10402, name: "Music" },
+  { id: 9648, name: "Mystery" },
+  { id: 10749, name: "Romance" },
+  { id: 878, name: "Science Fiction" },
+  { id: 10770, name: "TV Movie" },
+  { id: 53, name: "Thriller" },
+  { id: 10752, name: "War" },
+  { id: 37, name: "Western" },
+];
 
-// Genre mapping moved to a separate constant
-const GENRE_MAP = {
-  28: "Action", 12: "Adventure", 16: "Animation", 35: "Comedy", 
-  80: "Crime", 99: "Documentary", 18: "Drama", 10751: "Family", 
-  14: "Fantasy", 36: "History", 27: "Horror", 10402: "Music", 
-  9648: "Mystery", 10749: "Romance", 878: "Science Fiction", 
-  10770: "TV Movie", 53: "Thriller", 10752: "War", 37: "Western"
-};
+const tvGenres = [
+  { id: 10759, name: "Action & Adventure" },
+  { id: 16, name: "Animation" },
+  { id: 35, name: "Comedy" },
+  { id: 80, name: "Crime" },
+  { id: 99, name: "Documentary" },
+  { id: 18, name: "Drama" },
+  { id: 10751, name: "Family" },
+  { id: 10762, name: "Kids" },
+  { id: 9648, name: "Mystery" },
+  { id: 10763, name: "News" },
+  { id: 10764, name: "Reality" },
+  { id: 10765, name: "Sci-Fi & Fantasy" },
+  { id: 10766, name: "Soap" },
+  { id: 10767, name: "Talk" },
+  { id: 10768, name: "War & Politics" },
+  { id: 37, name: "Western" },
+];
 
-// Certification color mapping
-const CERTIFICATION_COLORS = {
-  "G": "#4CAF50",      // Green for General Audience
-  "PG": "#8BC34A",     // Light Green for Parental Guidance
-  "PG-13": "#FFEB3B",  // Yellow for Parents Strongly Cautioned
-  "R": "#F44336",      // Red for Restricted
-  "NC-17": "#9C27B0",  // Purple for No One 17 and Under
-  "Not Rated": "#9E9E9E" // Gray for Not Rated
+// Utility function to map genre IDs to names
+const getGenreNames = (genreIds, isTvShow) => {
+  const genres = isTvShow ? tvGenres : movieGenres;
+  return genreIds
+    .map((id) => genres.find((genre) => genre.id === id)?.name)
+    .filter(Boolean) // Remove undefined values
+    .join(", ");
 };
 
 function Content({ movies }) {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [movieDetails, setMovieDetails] = useState({
     cast: [],
-    director: "Loading...",
+    director: "",
     trailerUrl: "",
     platforms: [],
-    genres: [],
-    certification: "Loading..."
   });
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
-  const [isTvShow, setIsTvShow] = useState(false);
+  const [isTvShow, setIsTvShow] = useState(false);  // State to track if it's a TV show or movie
   const apiKey = import.meta.env.VITE_IMDB_APP_API_KEY;
 
-  // Memoized movie display logic
-  const displayedMovies = useMemo(() => 
-    isMobileView ? movies.slice(0, 7) : movies
-  , [movies, isMobileView]);
-
-  // Centralized reset function
-  const resetMovieDetails = useCallback(() => {
+  // Reset state function
+  const resetMovieDetails = () => {
     setMovieDetails({
       cast: [],
-      director: "Loading...",
+      director: "",
       trailerUrl: "",
       platforms: [],
-      genres: [],
-      certification: "Loading..."
     });
     setIsDescriptionExpanded(false);
-  }, []);
+  };
 
-  // Enhanced fetch function with TV show support
-  const fetchMovieDetails = useCallback(async (id, isTv = false) => {
-    console.log(`Fetching details for ${isTv ? "TV Show" : "Movie"} with ID: ${id}`);
-    try {
-      const basePath = isTv ? `/tv/${id}` : `/movie/${id}`;
-      
-      const endpoints = [
-        `${basePath}/credits`,
-        `${basePath}/videos`,
-        `${basePath}/watch/providers`,
-        `${basePath}`,
-        isTv ? null : `${basePath}/release_dates`
-      ].filter(Boolean);
+  // Function to handle movie or TV show details
+const fetchMovieDetails = async (id, isTv) => {
+  console.log(`Fetching details for ${isTv ? "TV Show" : "Movie"} with ID: ${id}`);
+  try {
+    const fetchMovie = isTv
+      ? fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${apiKey}`)
+      : fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`);
 
-      const fetchPromises = endpoints.map(endpoint => 
-        fetch(`${CONFIG.API_BASE_URL}${endpoint}?api_key=${apiKey}`)
-      );
+    const response = await fetchMovie;
+    const data = await response.json();
+    console.log("Fetched Data:", data);
 
-      const responses = await Promise.all(fetchPromises);
-      const dataPromises = responses.map(response => 
-        response.ok ? response.json() : null
-      );
+    // Fetch additional details
+    const [castResponse, trailerResponse, platformResponse] = await Promise.all([
+      fetch(isTv
+        ? `https://api.themoviedb.org/3/tv/${id}/credits?api_key=${apiKey}`
+        : `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`),
+      fetch(isTv
+        ? `https://api.themoviedb.org/3/tv/${id}/videos?api_key=${apiKey}`
+        : `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${apiKey}`),
+      fetch(isTv
+        ? `https://api.themoviedb.org/3/tv/${id}/watch/providers?api_key=${apiKey}`
+        : `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`),
+    ]);
 
-      const [
-        castData, 
-        trailerData, 
-        platformData, 
-        fullMediaData,
-        certificationData
-      ] = await Promise.all(dataPromises);
-
-      // Process director or creator
-      const personData = isTv
-        ? castData.crew.find((member) => member.job === "Creator")
-        : castData.crew.find((member) => member.job === "Director");
-
-      // Process trailer
-      const trailer = trailerData.results.find(
-        (video) => video.type === "Trailer" && video.site === "YouTube"
-      );
-
-      // Process platforms
-      const platforms = platformData.results?.IN?.flatrate || [];
-
-      // Process certification (for movies only)
-      const certification = !isTv && certificationData?.results
-        ?.find(result => result.iso_3166_1 === "IN")
-        ?.release_dates[0]?.certification || "Not Rated";
-
-      // Process genres
-      const genres = fullMediaData.genres || 
-        (selectedMovie.genre_ids?.map(id => ({
-          id, 
-          name: GENRE_MAP[id] || "Unknown Genre"
-        })) || []);
-
-      setMovieDetails({
-        cast: castData.cast.slice(0, CONFIG.MAX_CAST_DISPLAY),
-        director: personData ? personData.name : "Not Available",
-        trailerUrl: trailer ? `https://www.youtube.com/embed/${trailer.key}` : "",
-        platforms,
-        genres,
-        certification: certification || "Not Rated"
-      });
-    } catch (error) {
-      console.error("Details fetch error:", error);
-      resetMovieDetails();
+    if (!castResponse.ok || !trailerResponse.ok || !platformResponse.ok) {
+      throw new Error("Failed to fetch one or more resources.");
     }
-  }, [apiKey, selectedMovie, resetMovieDetails]);
 
-  // Mobile view detection
+    const [castData, trailerData, platformData] = await Promise.all([
+      castResponse.json(),
+      trailerResponse.json(),
+      platformResponse.json(),
+    ]);
+
+    // Process director or creator
+    const directorData = isTv
+      ? castData.crew.find((member) => member.job === "Creator")
+      : castData.crew.find((member) => member.job === "Director");
+
+    // Process trailer
+    const trailer = trailerData.results.find(
+      (video) => video.type === "Trailer" && video.site === "YouTube"
+    );
+
+    // Process platforms
+    const countryPlatforms = platformData.results?.IN?.flatrate || [];
+
+    setMovieDetails({
+      cast: castData.cast.slice(0, 15),
+      director: directorData ? directorData.name : "Not Available",
+      trailerUrl: trailer ? `https://www.youtube.com/embed/${trailer.key}` : "",
+      platforms: countryPlatforms,
+    });
+  } catch (error) {
+    console.error("Error fetching movie details:", error);
+    setMovieDetails({
+      cast: [],
+      director: "Unavailable",
+      trailerUrl: "",
+      platforms: [],
+    });
+  }
+};
+
+// Handle movie or TV show selection
+const handleMovieClick = (movie) => {
+  console.log("Selected Movie:", movie);
+  setSelectedMovie(movie);
+  resetMovieDetails();
+
+  const isTv = movie.media_type === "tv" || movie.first_air_date !== undefined; // Check for TV show
+  setIsTvShow(isTv);
+
+  fetchMovieDetails(movie.id, isTv);
+  document.body.classList.add("modal-open");
+};
+
+
+  const closeModal = () => {
+    setSelectedMovie(null);
+    resetMovieDetails();
+
+    document.body.classList.remove("modal-open");
+  };
+
+  const toggleDescription = () => {
+    setIsDescriptionExpanded((prev) => !prev);
+  };
+
+  // Detect mobile view
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileView(window.innerWidth <= CONFIG.MOBILE_BREAKPOINT);
+      setIsMobileView(window.innerWidth <= 768); // Mobile view if width <= 768px
     };
 
     handleResize();
@@ -144,151 +178,115 @@ function Content({ movies }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Movie/TV show click handler
-  const handleMovieClick = useCallback((movie) => {
-    console.log("Selected Movie:", movie);
-    setSelectedMovie(movie);
-    resetMovieDetails();
-
-    const isTv = movie.media_type === "tv" || movie.first_air_date !== undefined;
-    setIsTvShow(isTv);
-
-    fetchMovieDetails(movie.id, isTv);
-  }, [resetMovieDetails, fetchMovieDetails]);
-
-  // Description toggle handler
-  const toggleDescription = useCallback(() => {
-    setIsDescriptionExpanded(prev => !prev);
-  }, []);
-
-  // Render movie poster with fallback
-  const renderMoviePoster = (posterPath, title, className) => (
-    <img
-      src={posterPath 
-        ? `https://image.tmdb.org/t/p/w500${posterPath}` 
-        : "/default-image.png"}
-      alt={title}
-      className={className}
-    />
-  );
+  // Limit movies to 7 for mobile view
+  const displayedMovies = isMobileView ? movies.slice(0, 7) : movies;
 
   return (
     <>
-      <div className="content">
-        {displayedMovies.length > 0 ? (
-          displayedMovies.map((movie) => (
-            <div
-              key={movie.id}
-              className="movie-card"
-              onClick={() => handleMovieClick(movie)}
+     return (
+  <>
+    <div className="content">
+      {displayedMovies.length > 0 ? (
+        displayedMovies.map((movie) => (
+          <div
+            className="movie-card"
+            key={movie.id}
+            onClick={() => handleMovieClick(movie)}
+          >
+            <img
+              src={
+                movie.poster_path
+                  ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                  : "/default-image.png"
+              }
+              alt={movie.title || movie.name}
+              className="movie-image"
+            />
+            <h3 className="movie-name">{movie.title || movie.name}</h3>
+            <div className="movie-genres">
+              <p> {getGenreNames(movie.genre_ids || [], isTvShow) || "Unknown Genres"}</p>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>No movies or TV shows found.</p>
+      )}
+    </div>
+
+    {selectedMovie && (
+      <div className="modal">
+        <div className="modal-content">
+          <span className="close" onClick={closeModal}>
+            &times;
+          </span>
+          <img
+            src={
+              selectedMovie.poster_path
+                ? `https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`
+                : "/default-image.png"
+            }
+            alt={selectedMovie.title || selectedMovie.name}
+            className="modal-movie-image"
+          />
+          <div className="movie-title">{selectedMovie.title || selectedMovie.name}</div>
+           {/* Show genre when modal is open */}
+           <div className="movie-genres">
+              <strong>Genres:</strong> {getGenreNames(selectedMovie.genre_ids || [], isTvShow) || "Unknown Genres"}
+            </div>
+            <div className="release-date">
+              <div className="release-date-heading">Release Date:</div>{" "}
+                  {selectedMovie.release_date || selectedMovie.first_air_date || "N/A"}
+              </div>
+
+          <div className="category">
+            <div className="category-heading">Category:</div>{" "}
+            <button
+              className={`category-btn ${
+                selectedMovie.adult ? "adult" : "general"
+              }`}
             >
-              {renderMoviePoster(movie.poster_path, movie.title || movie.name, "movie-image")}
-              <h3 className="movie-name">{movie.title || movie.name}</h3>
+              {selectedMovie.adult ? "A (Adult)" : "U/A (General)"}
+            </button>
+          </div>
+          {selectedMovie.vote_average && (
+            <div className="rating">
+              <div className="rating-heading">Rating:</div>{" "}
+              <button className="rating-btn">
+                ⭐ {selectedMovie.vote_average.toFixed(1)} / 10
+              </button>
             </div>
-          ))
-        ) : (
-          <p>No movies or TV shows found.</p>
-        )}
-      </div>
-
-      {selectedMovie && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={() => setSelectedMovie(null)}>
-              &times;
-            </span>
-            
-            {renderMoviePoster(selectedMovie.poster_path, selectedMovie.title || selectedMovie.name, "modal-movie-image")}
-            
-            <h2>{selectedMovie.title || selectedMovie.name}</h2>
-            
-            <div className="movie-details-grid">
-              <div>
-                <strong>Release Date:</strong> {selectedMovie.release_date || selectedMovie.first_air_date || "N/A"}
+          )}
+          {selectedMovie.overview && (
+            <div className="description">
+              <strong>Description:</strong>
+              <div className="short-description">
+                {isDescriptionExpanded
+                  ? selectedMovie.overview
+                  : `${selectedMovie.overview.slice(0, 150)}...`}
+                <span className="read-more-text" onClick={toggleDescription}>
+                  {isDescriptionExpanded ? "Read Less" : "Read More"}
+                </span>
               </div>
-              
-              <div>
-                <strong>Category:</strong>
-                <button
-                  className={`category-btn ${
-                    selectedMovie.adult ? "adult" : "general"
-                  }`}
-                >
-                  {selectedMovie.adult ? "A (Adult)" : "U/A (General)"}
-                </button>
-              </div>
-              
-              {selectedMovie.vote_average && (
-                <div>
-                  <strong>Rating:</strong>
-                  <button className="rating-btn">
-                    ⭐ {selectedMovie.vote_average.toFixed(1)} / 10
-                  </button>
-                </div>
-              )}
-              
-              <div>
-                <strong>{isTvShow ? "Creator" : "Certification"}:</strong>
-                {isTvShow ? (
-                  movieDetails.director
-                ) : (
-                  <button
-                    className="certification-btn"
-                    style={{ 
-                      backgroundColor: CERTIFICATION_COLORS[movieDetails.certification] 
-                      || CERTIFICATION_COLORS["Not Rated"] 
-                    }}
-                  >
-                    {movieDetails.certification}
-                  </button>
+            </div>
+          )}
+          <div className="director">
+            <strong>{isTvShow ? "Creator" : "Director"}:</strong>{" "}
+            {movieDetails.director}
+          </div>
+          <div className="cast-heading">Cast:</div>
+          <ul className="cast">
+            {movieDetails.cast.length > 0 ? (
+              movieDetails.cast.map((member) => (
+              <li className="cas-listt" key={member.cast_id || `${member.name}-${member.character}`}>
+                {member.name} as {member.character}
+              </li>
+              ))
+              ) : (
+              <li>No cast information available.</li>
                 )}
-              </div>
-              
-              {movieDetails.genres.length > 0 && (
-                <div>
-                  <strong>Genres:</strong>
-                  <div className="genre-list">
-                    {movieDetails.genres.map((genre) => (
-                      <span key={genre.id} className="genre-tag">
-                        {genre.name}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+          </ul>
 
-            {selectedMovie.overview && (
-              <div className="description">
-                <strong>Description:</strong>
-                <div className="short-description">
-                  {isDescriptionExpanded
-                    ? selectedMovie.overview
-                    : `${selectedMovie.overview.slice(0, CONFIG.DESCRIPTION_PREVIEW_LENGTH)}...`}
-                  <span className="read-more-text" onClick={toggleDescription}>
-                    {isDescriptionExpanded ? "Read Less" : "Read More"}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            <div className="cast-section">
-              <br/>
-              <div className="cast-heading">Cast:</div>
-              <ul className="cast-list">
-                {movieDetails.cast.length > 0 ? (
-                  movieDetails.cast.map((member) => (
-                    <li key={member.cast_id || `${member.name}-${member.character}`}>
-                      {member.name} as {member.character}
-                    </li>
-                  ))
-                ) : (
-                  <li>No cast information available.</li>
-                )}
-              </ul>
-            </div>
-
-            <div className="platforms-section">
+          <div className="platforms-section">
               <h3>Platform Availability:</h3>
               <div className="platform-buttons">
                 {movieDetails.platforms.length > 0 ? (
@@ -317,48 +315,36 @@ function Content({ movies }) {
                     );
                   })
                 ) : (
-                  <p>No platform information available.</p>
+                   <span className="no-platfrom">No platforms available</span>
                 )}
               </div>
             </div>
-
-            {movieDetails.trailerUrl && (
-              <div className="trailer">
-                <h3>Trailer:</h3>
-                <iframe
-                  width="560"
-                  height="315"
-                  src={movieDetails.trailerUrl}
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              </div>
-            )}
-          </div>
+          {movieDetails.trailerUrl && (
+            <div className="trailer">
+              <h3>Trailer</h3>
+              <iframe
+                width="560"
+                height="315"
+                src={movieDetails.trailerUrl}
+                title="YouTube video player"
+                frameBorder="0"
+                allowFullScreen
+              ></iframe>
+            </div>
+          )}
         </div>
-      )}
+      </div>
+    )}
+  </>
+);
+
     </>
   );
 }
 
 Content.propTypes = {
-  movies: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      title: PropTypes.string,
-      name: PropTypes.string,
-      poster_path: PropTypes.string,
-      release_date: PropTypes.string,
-      first_air_date: PropTypes.string,
-      vote_average: PropTypes.number,
-      adult: PropTypes.bool,
-      overview: PropTypes.string,
-      genre_ids: PropTypes.arrayOf(PropTypes.number),
-      media_type: PropTypes.string
-    })
-  ).isRequired,
+  movies: PropTypes.array.isRequired, // Array of movie or TV show objects
 };
+
 
 export default Content;

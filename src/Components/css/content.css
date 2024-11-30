@@ -77,7 +77,13 @@
 .modal-movie-image:hover {
   transform: scale(1.02);
 }
+/* trailer */
 
+.trailer{
+  margin-top: 40px;
+  color: #ffffff;
+  font-weight: 600;
+}
 /* Trailer Iframe */
 .modal iframe {
   width: 100%;
@@ -87,12 +93,60 @@
   box-shadow: var(--button-shadow);
 }
 
-/* Genres and Tags */
+/* movie title */
+
+.movie-title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 27px;
+}
+
+.movie-genres {
+  font-size: 0.9em;
+  color: #c1c1c1;
+  margin-top: 5px;
+}
+
+/* realease data */
+
+.release-date{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  margin-top: 20px;
+}
+
+.release-date-heading{
+  font-weight: 600;
+}
+
+/* Category Button */
+
+.category{
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.category-heading{
+  font-weight: 600;
+} 
+
 .category-btn {
-  padding: var(--padding-small) var(--padding-medium);
+  padding: 5px 10px;
   border: none;
   cursor: pointer;
-  border-radius: var(--border-radius);
+  border-radius: 5px;
 }
 
 .category-btn.adult {
@@ -105,34 +159,28 @@
   color: white;
 }
 
+/* rating */
+.rating{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.rating-heading{
+  color: #ffffff;
+  font-weight: 600;
+}
+
 .rating-btn {
   background-color: #fff280;
   border: none;
   color: #000;
-  padding: var(--padding-small) var(--padding-medium);
-  border-radius: var(--border-radius);
+  padding: 5px 10px;
+  border-radius: 5px;
   font-size: 14px;
   font-weight: bold;
-}
-
-.genre-list {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.genre-tag {
-  background-color: #f0f0f033;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.8em;
-  white-space: nowrap;
-  display: inline-block;
-}
-
-.genre-tag:hover {
-  background-color: rgba(240, 240, 240, 0.2);
 }
 
 /* Description Styling */
@@ -181,24 +229,37 @@
   transform: rotate(90deg);
 }
 
-/* Cast List */
-.cast-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+.director {
+  color: #ffffff;
+  display: flex;
+  margin-top: 20px;
   gap: 10px;
+}
+
+.cast {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Two columns for cast members */
+  gap: 10px; /* Space between rows and columns */
   list-style-type: none;
   padding: 0;
+  margin: 15px 0 0;
 }
 
-.cast-list li {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #fff;
-  padding: var(--padding-medium);
-  border-radius: var(--border-radius);
-  transition: background-color 0.3s ease;
+.cas-listt {
+  font-size: 14px;
+  padding: 10px;
+  color: #ffffff; /* White text for readability */
+  text-align: left;
+  font-weight: 500;
+  background-color: #282626; /* Dark background for each cast item */
+  border-radius: 8px; /* Rounded corners for a modern look */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Add subtle shadow for depth */
+  height: 30px; /* Consistent height for all items */
+  display: flex;
+  align-items: center; /* Vertically align content */
 }
 
-.cast-list li:hover {
+.cas-listt:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -234,6 +295,10 @@
   height: 20px;
 }
 
+.no-platfrom{
+  color: var(--hover-color)
+  /* margin-top: 20px; */
+}
 /* Animations */
 @keyframes modalSlideIn {
   from {
@@ -249,7 +314,8 @@
 /* Responsive Adjustments */
 @media (max-width: var(--mobile-breakpoint)) {
   .modal-content {
-    width: 95%;
+    width: 75%;
+    max-height: 80vh;
     padding: var(--padding-medium);
     border-radius: var(--border-radius);
   }

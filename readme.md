@@ -1,107 +1,136 @@
----
+# 🍿 Popcorn Hub
 
-# Popcorn Hub
-
-A React-based movie app that fetches and displays popular movies from various genres, including Bollywood, Hollywood, and Punjabi cinema. The app allows users to search for movies, view their details by clicking on movie cards, and navigate through pages of movies with the new pagination feature.
+> A modern movie discovery platform combining React + FastAPI + Machine Learning for intelligent movie recommendations.
 
 <img src="src/assets/Popcorn-Hub.png" alt="PopcornHub Output" />
+<img src="src/assets/Movei-Card.png" alt="Movie Card" />
+<img src="src/assets/Recommendations.png" alt="Movie Suggestions" />
 
-## Features
+## 🌟 Features
 
-- **Movie Sections**: View movies from different genres like Bollywood, Hollywood, Punjabi, and more.
-- **Genre Filtering**: Users can filter movies by specific genres such as Action, Comedy, Drama, etc.
-- **Search Functionality**: Search movies by title across all genres.
-- **Pagination**: Navigate through pages of movie results instead of infinite scroll.
-- **Loading Indicator**: Display a loading spinner when fetching data or during a genre change.
-- **Responsive Design**: Mobile-friendly design that adapts to different screen sizes.
-- **Movie Details**: Click on any movie card to view additional details like release date, rating, description, etc.
+### 🎬 Core Functionality
+- **Multi-Genre Browsing** – Bollywood, Hollywood, Punjabi & more
+- **Smart Search** – Find movies by title across all genres
+- **Pagination** – Smooth navigation through movie collections
+- **Responsive Design** – Mobile & desktop optimized
 
-## Tech Stack
+### 🤖 AI-Based Recommendations
+- **Content-Based Suggestions** – Based on movie similarities
+- **Personalized Feed** *(Coming Soon)* – Watch-history-driven
+- **Movie DNA Analysis** – Using NLP on metadata (genre, cast, crew)
 
-- **Frontend**: React, HTML5, CSS3, JavaScript
-- **API**: The Movie Database (TMDb) API for fetching movie data
-- **State Management**: React's `useState` and `useEffect` hooks
-- **Styling**: Custom CSS for styling components
-- **Routing**: React Router for navigation between different movie sections
+---
 
-## Setup
+## 🛠️ Tech Stack
 
-### Prerequisites
+| Layer        | Tech                                                                 |
+|--------------|----------------------------------------------------------------------|
+| **Frontend** | React, HTML, CSS, JavaScript, React Router                           |
+| **Backend**  | FastAPI, Python 3.10+, scikit-learn, Pandas                          |
+| **APIs**     | TMDB API, Custom ML Recommender Engine                               |
+| **Hosting**  | Vercel (Frontend)                                                    |
 
-- Node.js and npm installed on your machine.
+---
 
-### Install Dependencies
+## 🚀 Getting Started
 
-1. Clone the repository:
+### ✅ Prerequisites
+- Node.js v16+
+- Python 3.10+
+- TMDB API key
 
-    ```bash
-    git clone https://github.com/hii-vijayy/MovieSearchApp.git
-    ```
+### 🧩 Installation
 
-2. Navigate to the project directory:
-
-    ```bash
-    cd MovieSearchApp
-    ```
-
-3. Install the dependencies:
-
-    ```bash
-    npm install
-    ```
-
-4. Set up your environment variables:
-   
-    Create a `.env` file in the root directory and add your API key for TMDb:
-
-    ```bash
-    VITE_IMDB_APP_API_KEY=<your-api-key>
-    ```
-
-    You can get an API key by signing up at [TMDb](https://www.themoviedb.org/).
-
-### Run the App
-
-Start the development server:
-
+1. **Clone Repositories**
 ```bash
+git clone https://github.com/yourusername/popcorn-hub-frontend.git
+git clone https://github.com/yourusername/movie-recommender-fastapi.git
+
+
+### Frontend Setup
+
+cd popcorn-hub-frontend
+npm install
+
+### Backend Setup
+
+cd ../movie-recommender-fastapi
+python -m venv venv
+source venv/bin/activate  # For Linux/Mac
+# OR
+venv\Scripts\activate     # For Windows
+
+pip install -r requirements.txt
+
+### Environment Variables Create .env.local in the frontend root:
+
+VITE_IMDB_APP_API_KEY=your_tmdb_key
+VITE_FASTAPI_URL=http://localhost:8000
+
+
+### Running the App
+
+uvicorn main:app --reload
+
+
+Start Frontend:-
+
 npm run dev
-```
+npm run dev
 
-## Genre Feature
 
-- **View Movies by Genre**: Select a genre to view a list of movies. The app supports various genres such as:
-  - Action
-  - Adventure
-  - Comedy
-  - Drama
-  - Horror
-  - Romance
-  - And more...
+ ### How It Works: Recommendation Engine
 
-## Loading Indicator
+ graph TD
+A[User Input] --> B(TMDb Data)
+B --> C[Feature Engineering]
+C --> D[NLP Vectorization]
+D --> E[Cosine Similarity]
+E --> F[Recommended Movies]
 
-- **Loading Spinner**: A loading spinner is displayed whenever new movie data is being fetched, such as during a genre change or movie search.
 
-## Pagination
+### 📁 Project Structure
 
-- **Pagination**: The app now uses pagination instead of infinite scroll. Navigate through movie pages using the `Next` and `Previous` buttons. Each page displays a set number of movies, allowing for better control and performance when browsing large lists.
+popcorn-hub/
+├── frontend/        # React App
+│   ├── public/      
+│   └── src/         
+│       ├── components/
+│       ├── lib/
+│       └── types/
+│
+├── backend/         # FastAPI Backend
+│   ├── data/
+│   ├── models/
+│   ├── routes/
+│   └── recommender.py
+│
+└── datasets/
+    ├── tmdb_5000_movies.csv
+    └── tmdb_5000_credits.csv
 
-## Movie Card Details
+### 🚧 Roadmap
 
-- **Movie Card**: Each movie card displays comprehensive details about the movie, including:
-  - Movie Title
-  - Release Date
-  - Rating
-  - Overview/Description
-  - Poster Image
-  - Cast
-  - Trailer
-  - Platform Availability
+**Current Limitations**
+Requires exact movie title match
+Dataset limited to 5000 entries
 
-Users can click on a movie card to view additional information about the selected movie.
+**Upcoming Features**
+ TF-IDF vectorization
+ Fuzzy search / partial match
+ Real-time collaborative filtering
+ Dark mode toggle
+ User ratings
 
-## Future Features
 
-- **User Authentication**: Option for users to save their favorite movies.
-- **Dark Mode**: Add a dark mode toggle for a better user experience.
+### 📚 Resources
+
+TMDB Dataset (Kaggle)
+FastAPI Deployment Guide
+React Performance Doc
+
+### 📜 License
+
+This project is licensed under the MIT License.
+
+Made with ❤️ by Vijay Kumar

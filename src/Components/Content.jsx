@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import "../App.css";
+"use client"
 
+import { useEffect, useState } from "react"
+import PropTypes from "prop-types"
+import MovieRecommendations from "../Components/MovieRecommendations"
+import { FaStar, FaCalendarAlt, FaUser, FaTimes } from "react-icons/fa"
+import "../App.css"
 // Genre lists
 const movieGenres = [
   { id: 28, name: "Action" },
@@ -49,7 +52,7 @@ const getGenreNames = (genreIds, isTvShow) => {
   const genres = isTvShow ? tvGenres : movieGenres;
   return genreIds
     .map((id) => genres.find((genre) => genre.id === id)?.name)
-    .filter(Boolean) // Remove undefined values
+    .filter(Boolean)
     .join(", ");
 };
 
@@ -63,7 +66,8 @@ function Content({ movies }) {
   });
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
-  const [isTvShow, setIsTvShow] = useState(false);  // State to track if it's a TV show or movie
+  const [isTvShow, setIsTvShow] = useState(false);
+  
   const apiKey = import.meta.env.VITE_IMDB_APP_API_KEY;
 
   // Reset state function
@@ -77,89 +81,107 @@ function Content({ movies }) {
     setIsDescriptionExpanded(false);
   };
 
-  // Function to handle movie or TV show details
-const fetchMovieDetails = async (id, isTv) => {
-  console.log(`Fetching details for ${isTv ? "TV Show" : "Movie"} with ID: ${id}`);
-  try {
-    const fetchMovie = isTv
-      ? fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${apiKey}`)
-      : fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`);
-
-    const response = await fetchMovie;
-    const data = await response.json();
-    console.log("Fetched Data:", data);
-
-    // Fetch additional details
-    const [castResponse, trailerResponse, platformResponse] = await Promise.all([
-      fetch(isTv
-        ? `https://api.themoviedb.org/3/tv/${id}/credits?api_key=${apiKey}`
-        : `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`),
-      fetch(isTv
-        ? `https://api.themoviedb.org/3/tv/${id}/videos?api_key=${apiKey}`
-        : `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${apiKey}`),
-      fetch(isTv
-        ? `https://api.themoviedb.org/3/tv/${id}/watch/providers?api_key=${apiKey}`
-        : `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`),
-    ]);
-
-    if (!castResponse.ok || !trailerResponse.ok || !platformResponse.ok) {
-      throw new Error("Failed to fetch one or more resources.");
+  // Handle recommendation click
+  const handleRecommendationClick = async (recommendedMovie) => {
+    // First, close the current modal
+    closeModal();
+    
+    // Then fetch full details for the recommended movie
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/movie/${recommendedMovie.id}?api_key=${apiKey}`
+      );
+      const movieData = await response.json();
+      
+      // Now open the modal with this movie
+      setSelectedMovie(movieData);
+      resetMovieDetails();
+      setIsTvShow(false);
+      fetchMovieDetails(movieData.id, false);
+      document.body.classList.add("modal-open");
+    } catch (error) {
+      console.error("Error fetching recommended movie details:", error);
     }
+  };
 
-    const [castData, trailerData, platformData] = await Promise.all([
-      castResponse.json(),
-      trailerResponse.json(),
-      platformResponse.json(),
-    ]);
+  // Function to handle movie or TV show details
+  const fetchMovieDetails = async (id, isTv) => {
+    try {
+      const fetchMovie = isTv
+        ? fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${apiKey}`)
+        : fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`);
 
-    // Process director or creator
-    const directorData = isTv
-      ? castData.crew.find((member) => member.job === "Creator")
-      : castData.crew.find((member) => member.job === "Director");
+      const response = await fetchMovie;
+      const data = await response.json();
 
-    // Process trailer
-    const trailer = trailerData.results.find(
-      (video) => video.type === "Trailer" && video.site === "YouTube"
-    );
+      // Fetch additional details
+      const [castResponse, trailerResponse, platformResponse] = await Promise.all([
+        fetch(isTv
+          ? `https://api.themoviedb.org/3/tv/${id}/credits?api_key=${apiKey}`
+          : `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`),
+        fetch(isTv
+          ? `https://api.themoviedb.org/3/tv/${id}/videos?api_key=${apiKey}`
+          : `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${apiKey}`),
+        fetch(isTv
+          ? `https://api.themoviedb.org/3/tv/${id}/watch/providers?api_key=${apiKey}`
+          : `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`),
+      ]);
 
-    // Process platforms
-    const countryPlatforms = platformData.results?.IN?.flatrate || [];
+      if (!castResponse.ok || !trailerResponse.ok || !platformResponse.ok) {
+        throw new Error("Failed to fetch one or more resources.");
+      }
 
-    setMovieDetails({
-      cast: castData.cast.slice(0, 15),
-      director: directorData ? directorData.name : "Not Available",
-      trailerUrl: trailer ? `https://www.youtube.com/embed/${trailer.key}` : "",
-      platforms: countryPlatforms,
-    });
-  } catch (error) {
-    console.error("Error fetching movie details:", error);
-    setMovieDetails({
-      cast: [],
-      director: "Unavailable",
-      trailerUrl: "",
-      platforms: [],
-    });
-  }
-};
+      const [castData, trailerData, platformData] = await Promise.all([
+        castResponse.json(),
+        trailerResponse.json(),
+        platformResponse.json(),
+      ]);
 
-// Handle movie or TV show selection
-const handleMovieClick = (movie) => {
-  console.log("Selected Movie:", movie);
-  setSelectedMovie(movie);
-  resetMovieDetails();
+      // Process director or creator
+      const directorData = isTv
+        ? castData.crew.find((member) => member.job === "Creator")
+        : castData.crew.find((member) => member.job === "Director");
 
-  const isTv = movie.media_type === "tv" || movie.first_air_date !== undefined; // Check for TV show
-  setIsTvShow(isTv);
+      // Process trailer
+      const trailer = trailerData.results.find(
+        (video) => video.type === "Trailer" && video.site === "YouTube"
+      );
 
-  fetchMovieDetails(movie.id, isTv);
-  document.body.classList.add("modal-open");
-};
+      // Process platforms
+      const countryPlatforms = platformData.results?.IN?.flatrate || [];
 
+      setMovieDetails({
+        cast: castData.cast.slice(0, 15),
+        director: directorData ? directorData.name : "Not Available",
+        trailerUrl: trailer ? `https://www.youtube.com/embed/${trailer.key}` : "",
+        platforms: countryPlatforms,
+      });
+    } catch (error) {
+      console.error("Error fetching movie details:", error);
+      setMovieDetails({
+        cast: [],
+        director: "Unavailable",
+        trailerUrl: "",
+        platforms: [],
+      });
+    }
+  };
+
+  // Handle movie or TV show selection
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+    resetMovieDetails();
+
+    const isTv = movie.media_type === "tv" || movie.first_air_date !== undefined;
+    setIsTvShow(isTv);
+
+    fetchMovieDetails(movie.id, isTv);
+    document.body.classList.add("modal-open");
+  };
 
   const closeModal = () => {
     setSelectedMovie(null);
     resetMovieDetails();
-
     document.body.classList.remove("modal-open");
   };
 
@@ -170,7 +192,7 @@ const handleMovieClick = (movie) => {
   // Detect mobile view
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileView(window.innerWidth <= 768); // Mobile view if width <= 768px
+      setIsMobileView(window.innerWidth <= 768);
     };
 
     handleResize();
@@ -183,159 +205,199 @@ const handleMovieClick = (movie) => {
 
   return (
     <>
-     return (
-  <>
-    <div className="content">
       {displayedMovies.length > 0 ? (
-        displayedMovies.map((movie) => (
-          <div
-            className="movie-card"
-            key={movie.id}
-            onClick={() => handleMovieClick(movie)}
-          >
-            <img
-              src={
-                movie.poster_path
-                  ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                  : "/default-image.png"
-              }
-              loading="lazy"
-              alt={movie.title || movie.name}
-              className="movie-image"
-            />
-            <h3 className="movie-name">{movie.title || movie.name}</h3>
-          </div>
-        ))
-      ) : (
-        <p>No movies or TV shows found.</p>
-      )}
-    </div>
-
-    {selectedMovie && (
-      <div className="modal">
-        <div className="modal-content">
-          <span className="close" onClick={closeModal}>
-            &times;
-          </span>
-          <img
-            src={
-              selectedMovie.poster_path
-                ? `https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`
-                : "/default-image.png"
-            }
-            loading="lazy"
-            alt={selectedMovie.title || selectedMovie.name}
-            className="modal-movie-image"
-          />
-          <div className="movie-title">{selectedMovie.title || selectedMovie.name}</div>
-           {/* Show genre when modal is open */}
-           <div className="movie-genres">
-              <strong>Genres:</strong> {getGenreNames(selectedMovie.genre_ids || [], isTvShow) || "Unknown Genres"}
-            </div>
-            <div className="release-date">
-              <div className="release-date-heading">Release Date:</div>{" "}
-                  {selectedMovie.release_date || selectedMovie.first_air_date || "N/A"}
-              </div>
-
-          <div className="category">
-            <div className="category-heading">Category:</div>{" "}
-            <button
-              className={`category-btn ${
-                selectedMovie.adult ? "adult" : "general"
-              }`}
+        <div className="content-grid">
+          {displayedMovies.map((movie) => (
+            <div
+              key={movie.id}
+              onClick={() => handleMovieClick(movie)}
+              className="movie-card-container"
             >
-              {selectedMovie.adult ? "A (Adult)" : "U/A (General)"}
-            </button>
-          </div>
-          {selectedMovie.vote_average && (
-            <div className="rating">
-              <div className="rating-heading">Rating:</div>{" "}
-              <button className="rating-btn">
-                ⭐ {selectedMovie.vote_average.toFixed(1)} / 10
-              </button>
-            </div>
-          )}
-          {selectedMovie.overview && (
-            <div className="description">
-              <strong>Description:</strong>
-              <div className="short-description">
-                {isDescriptionExpanded
-                  ? selectedMovie.overview
-                  : `${selectedMovie.overview.slice(0, 150)}...`}
-                <span className="read-more-text" onClick={toggleDescription}>
-                  {isDescriptionExpanded ? "Read Less" : "Read More"}
-                </span>
+              <div className="movie-card">
+                <div className="movie-poster-container">
+                  <img
+                    src={
+                      movie.poster_path
+                        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                        : "/placeholder.svg?height=300&width=200"
+                    }
+                    alt={movie.title || movie.name}
+                    className="movie-poster"
+                    loading="lazy"
+                  />
+                  <div className="movie-poster-overlay"></div>
+                </div>
+                <div className="movie-info">
+                  <h3 className="movie-title-small">{movie.title || movie.name}</h3>
+                  {movie.vote_average && (
+                    <div className="movie-rating">
+                      <FaStar className="rating-star" />
+                      {movie.vote_average.toFixed(1)}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          )}
-          <div className="director">
-            <strong>{isTvShow ? "Creator" : "Director"}:</strong>{" "}
-            {movieDetails.director}
-          </div>
-          <div className="cast-heading">Cast:</div>
-          <ul className="cast">
-            {movieDetails.cast.length > 0 ? (
-              movieDetails.cast.map((member) => (
-              <li className="cas-listt" key={member.cast_id || `${member.name}-${member.character}`}>
-                {member.name} as {member.character}
-              </li>
-              ))
-              ) : (
-              <li>No cast information available.</li>
-                )}
-          </ul>
-
-          <div className="platform-heading">Platform Availability:</div>
-          <div className="platform-buttons">
-            {movieDetails.platforms.length > 0 ? (
-              movieDetails.platforms.map((platform) => (
-                <button
-                  key={platform.provider_id}
-                  className="platform-btn"
-                  style={{
-                    backgroundColor:
-                      platform.provider_name.toLowerCase() === "netflix"
-                        ? "#e50914"
-                        : platform.provider_name.toLowerCase() === "prime video"
-                        ? "#00a8e1"
-                        : platform.provider_name.toLowerCase() === "hotstar"
-                        ? "#1b74e4"
-                        : "#4f4f4f",
-                  }}
-                >
-                  {platform.provider_name}
-                </button>
-              ))
-            ) : (
-              <span className="no-platfrom">No platforms available</span>
-            )}
-          </div>
-          {movieDetails.trailerUrl && (
-            <div className="trailer">
-              <h3>Trailer</h3>
-              <iframe
-                width="560"
-                height="315"
-                src={movieDetails.trailerUrl}
-                title="YouTube video player"
-                frameBorder="0"
-                allowFullScreen
-              ></iframe>
-            </div>
-          )}
+          ))}
         </div>
-      </div>
-    )}
-  </>
-);
+      ) : (
+        <div className="no-movies-message">
+          <p>No movies or TV shows found.</p>
+        </div>
+      )}
 
+      {selectedMovie && (
+        <div className="modal-overlay">
+          <div className="modal-wrapper">
+            <button
+              onClick={closeModal}
+              className="modal-close-button"
+            >
+              <FaTimes />
+            </button>
+            
+            <div className="modal-content-flex">
+              <div className="modal-poster-section">
+                <img
+                  src={
+                    selectedMovie.poster_path
+                      ? `https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`
+                      : "/placeholder.svg?height=450&width=300"
+                  }
+                  alt={selectedMovie.title || selectedMovie.name}
+                  className="modal-poster"
+                  loading="lazy"
+                />
+                
+                <div className="modal-metadata">
+                  {selectedMovie.vote_average && (
+                    <div className="modal-rating">
+                      <div className="rating-badge">
+                        <FaStar className="rating-badge-icon" />
+                        <span className="rating-badge-text">{selectedMovie.vote_average.toFixed(1)}/10</span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="modal-release-date">
+                    <FaCalendarAlt className="modal-icon" />
+                    <span>{selectedMovie.release_date || selectedMovie.first_air_date || "N/A"}</span>
+                  </div>
+                  
+                  <div className="modal-director">
+                    <FaUser className="modal-icon" />
+                    <span className="director-label">
+                      <span className="director-title">{isTvShow ? "Creator" : "Director"}:</span> {movieDetails.director}
+                    </span>
+                  </div>
+                  
+                  <div className="modal-platforms">
+                    <div className="platforms-title">Available on:</div>
+                    {movieDetails.platforms.length > 0 ? (
+                      <div className="platforms-list">
+                        {movieDetails.platforms.map((platform) => (
+                          <span
+                            key={platform.provider_id}
+                            className="platform-badge"
+                            style={{
+                              backgroundColor:
+                                platform.provider_name.toLowerCase() === "netflix"
+                                  ? "#e50914"
+                                  : platform.provider_name.toLowerCase() === "prime video"
+                                  ? "#00a8e1"
+                                  : platform.provider_name.toLowerCase() === "hotstar"
+                                  ? "#1b74e4"
+                                  : "#4f4f4f",
+                            }}
+                          >
+                            {platform.provider_name}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="no-platforms">No platforms available</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="modal-details-section">
+                <h2 className="modal-title">{selectedMovie.title || selectedMovie.name}</h2>
+                
+                <div className="modal-genres">
+                  <span className="genres-text">
+                    {getGenreNames(selectedMovie.genre_ids || [], isTvShow) || "Unknown Genres"}
+                  </span>
+                </div>
+                
+                {selectedMovie.overview && (
+                  <div className="modal-overview">
+                    <h3 className="overview-title">Overview</h3>
+                    <p className="overview-text">
+                      {isDescriptionExpanded ? selectedMovie.overview : `${selectedMovie.overview.slice(0, 150)}...`}
+                      <button 
+                        onClick={toggleDescription} 
+                        className="read-more-button"
+                      >
+                        {isDescriptionExpanded ? "Read Less" : "Read More"}
+                      </button>
+                    </p>
+                  </div>
+                )}
+                
+                {movieDetails.trailerUrl && (
+                  <div className="modal-trailer">
+                    <h3 className="trailer-title">Trailer</h3>
+                    <div className="trailer-container">
+                      <iframe
+                        width="100%"
+                        height="100%"
+                        src={movieDetails.trailerUrl}
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allowFullScreen
+                        className="trailer-iframe"
+                      ></iframe>
+                    </div>
+                  </div>
+                )}
+                
+                <div className="modal-cast">
+                  <h3 className="cast-title">Cast</h3>
+                  <div className="cast-grid">
+                    {movieDetails.cast.length > 0 ? (
+                      movieDetails.cast.map((member) => (
+                        <div 
+                          key={member.cast_id || `${member.name}-${member.character}`}
+                          className="cast-member"
+                        >
+                          <span className="cast-name">{member.name}</span> as {member.character}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="no-cast">No cast information available.</div>
+                    )}
+                  </div>
+                </div>
+                
+                {!isTvShow && selectedMovie.title && (
+                  <MovieRecommendations 
+                    movieTitle={selectedMovie.title}
+                    apiKey={apiKey}
+                    onRecommendationClick={handleRecommendationClick}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
 
 Content.propTypes = {
-  movies: PropTypes.array.isRequired, // Array of movie or TV show objects
+  movies: PropTypes.array.isRequired,
 };
-
 
 export default Content;

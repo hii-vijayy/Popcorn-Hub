@@ -1,11 +1,13 @@
 import React from 'react';
-import '../App.css'; // Add this CSS file for styling
+import { FaSpinner } from "react-icons/fa";
 
 const LoadingScreen = () => {
   return (
     <div className="loading-screen">
-      <div className="spinner"></div>
-      <p>Loading...</p>
+      <div className="loading-content">
+        <FaSpinner className="loading-spinner" />
+        <p className="loading-text">Loading...</p>
+      </div>
     </div>
   );
 };

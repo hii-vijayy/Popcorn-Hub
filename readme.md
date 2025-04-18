@@ -2,9 +2,9 @@
 
 > A modern movie discovery platform combining React + FastAPI + Machine Learning for intelligent movie recommendations.
 
-<img src="src/assets/Popcorn-Hub.png" alt="PopcornHub Output" />
-<img src="src/assets/Movei-Card.png" alt="Movie Card" />
-<img src="src/assets/Recommendations.png" alt="Movie Suggestions" />
+![PopcornHub Output](src/assets/Popcorn-Hub.png)
+![Movie Card](src/assets/Movei-Card.png)
+![Movie Suggestions](src/assets/Recommendations.png)
 
 ## 🌟 Features
 
@@ -19,18 +19,14 @@
 - **Personalized Feed** *(Coming Soon)* – Watch-history-driven
 - **Movie DNA Analysis** – Using NLP on metadata (genre, cast, crew)
 
----
-
 ## 🛠️ Tech Stack
 
-| Layer        | Tech                                                                 |
+| Layer | Tech |
 |--------------|----------------------------------------------------------------------|
-| **Frontend** | React, HTML, CSS, JavaScript, React Router                           |
-| **Backend**  | FastAPI, Python 3.10+, scikit-learn, Pandas                          |
-| **APIs**     | TMDB API, Custom ML Recommender Engine                               |
-| **Hosting**  | Vercel (Frontend)                                                    |
-
----
+| **Frontend** | React, HTML, CSS, JavaScript, React Router |
+| **Backend** | FastAPI, Python 3.10+, scikit-learn, Pandas |
+| **APIs** | TMDB API, Custom ML Recommender Engine |
+| **Hosting** | Vercel (Frontend) |
 
 ## 🚀 Getting Started
 
@@ -45,61 +41,68 @@
 ```bash
 git clone https://github.com/yourusername/popcorn-hub-frontend.git
 git clone https://github.com/yourusername/movie-recommender-fastapi.git
+```
 
-
-### Frontend Setup
-
+2. **Frontend Setup**
+```bash
 cd popcorn-hub-frontend
 npm install
+```
 
-### Backend Setup
-
+3. **Backend Setup**
+```bash
 cd ../movie-recommender-fastapi
 python -m venv venv
 source venv/bin/activate  # For Linux/Mac
 # OR
-venv\Scripts\activate     # For Windows
-
+venv\Scripts\activate  # For Windows
 pip install -r requirements.txt
+```
 
-### Environment Variables Create .env.local in the frontend root:
-
+4. **Environment Variables**  
+   Create `.env.local` in the frontend root:
+```
 VITE_IMDB_APP_API_KEY=your_tmdb_key
 VITE_FASTAPI_URL=http://localhost:8000
+```
 
+### 🏃 Running the Application
 
-### Running the App
-
+1. **Start Backend**
+```bash
 uvicorn main:app --reload
+```
 
-
-Start Frontend:-
-
+2. **Start Frontend**
+```bash
 npm run dev
-npm run dev
+```
 
+Visit `http://localhost:3000` to explore!
 
- ### How It Works: Recommendation Engine
+## 🧠 How Our Recommendation System Works
 
- graph TD
+```mermaid
+graph TD
 A[User Input] --> B(TMDb Data)
 B --> C[Feature Engineering]
 C --> D[NLP Vectorization]
 D --> E[Cosine Similarity]
 E --> F[Recommended Movies]
+```
 
+## 📁 Project Structure
 
-### 📁 Project Structure
-
+```
 popcorn-hub/
-├── frontend/        # React App
-│   ├── public/      
-│   └── src/         
+├── frontend/ # React App
+│   ├── public/
+│   └── src/
 │       ├── components/
 │       ├── lib/
 │       └── types/
 │
-├── backend/         # FastAPI Backend
+├── backend/ # FastAPI Backend
 │   ├── data/
 │   ├── models/
 │   ├── routes/
@@ -108,29 +111,29 @@ popcorn-hub/
 └── datasets/
     ├── tmdb_5000_movies.csv
     └── tmdb_5000_credits.csv
+```
 
-### 🚧 Roadmap
+## 🚧 Limitations & Roadmap
 
 **Current Limitations**
-Requires exact movie title match
-Dataset limited to 5000 entries
+- Requires exact movie title match
+- Dataset limited to 5000 entries
 
 **Upcoming Features**
- TF-IDF vectorization
- Fuzzy search / partial match
- Real-time collaborative filtering
- Dark mode toggle
- User ratings
+- [ ] TF-IDF vectorization
+- [ ] Fuzzy search / partial match
+- [ ] Real-time collaborative filtering
+- [ ] Dark mode toggle
+- [ ] User ratings
 
+## 📚 Resources
+- [TMDB Dataset (Kaggle)](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata)
+- [FastAPI Deployment Guide](https://fastapi.tiangolo.com/deployment/)
+- [React Performance Doc](https://react.dev/learn/optimizing-performance)
 
-### 📚 Resources
-
-TMDB Dataset (Kaggle)
-FastAPI Deployment Guide
-React Performance Doc
-
-### 📜 License
-
+## 📜 License
 This project is licensed under the MIT License.
+
+---
 
 Made with ❤️ by Vijay Kumar

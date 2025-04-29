@@ -3,7 +3,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   background-color: #000000;
   color: #ffffff;
 }
@@ -307,7 +307,7 @@ body.modal-open {
 
 .movie-poster-container {
   position: relative;
-  aspect-ratio: 2/3;
+  aspect-ratio: 2 / 3;
   overflow: hidden;
 }
 
@@ -469,7 +469,8 @@ body.modal-open {
   font-weight: 600;
 }
 
-.modal-release-date, .modal-director {
+.modal-release-date,
+.modal-director {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -578,7 +579,7 @@ body.modal-open {
 }
 
 .trailer-container {
-  aspect-ratio: 16/9;
+  aspect-ratio: 16 / 9;
   border-radius: 8px;
   overflow: hidden;
 }
@@ -662,7 +663,7 @@ body.modal-open {
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  aspect-ratio: 2/3;
+  aspect-ratio: 2 / 3;
 }
 
 .recommendation-image {
@@ -812,7 +813,8 @@ body.modal-open {
   }
 }
 
-.footer-copyright, .footer-made-by {
+.footer-copyright,
+.footer-made-by {
   color: #888;
   font-size: 14px;
 }
@@ -834,3 +836,288 @@ body.modal-open {
 .social-link:hover {
   color: white;
 }
+
+/* Add these styles for the mobile genre panel */
+.genre-toggle-button {
+  display: none;
+  position: absolute;
+  top: 100px; /* Position below search bar */
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(to right, #e50914, #b81d24);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 30;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.genre-toggle-button:hover {
+  transform: scale(1.05);
+}
+
+/* Fix the genre mobile panel styles */
+.genre-mobile-panel {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80%;
+  max-width: 300px;
+  height: 100vh;
+  background-color: #111;
+  z-index: 40;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.genre-mobile-panel.open {
+  transform: translateX(0);
+}
+
+/* Make sure the genre lists are visible in the mobile panel */
+.genre-mobile-panel .genre-container {
+  display: block;
+  width: 100%;
+}
+
+.genre-mobile-panel .genre-sticky {
+  position: static;
+}
+
+.genre-mobile-panel .genre-section {
+  margin-bottom: 20px;
+}
+
+.genre-mobile-panel .genre-heading {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.genre-mobile-panel .genre-list {
+  max-height: none;
+}
+
+/* Fix the overlay behavior */
+.genre-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 35;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.genre-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Improved mobile styles */
+@media (max-width: 767px) {
+  .genre-toggle-button {
+    display: flex;
+  }
+
+  .genre-mobile-panel {
+    display: block;
+  }
+
+  .genre-overlay {
+    display: block;
+  }
+
+  .genre-container {
+    display: none;
+  }
+
+  /* Improve movie card sizing for mobile */
+  .content-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .movie-card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .movie-info {
+    padding: 8px;
+  }
+
+  .movie-title-small {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  /* Improve modal for mobile */
+  .modal-wrapper {
+    width: 95%;
+    max-height: 85vh;
+  }
+
+  .modal-poster-section {
+    padding: 12px;
+  }
+
+  .modal-details-section {
+    padding: 12px;
+  }
+
+  .modal-title {
+    font-size: 20px;
+  }
+
+  .trailer-container {
+    aspect-ratio: 16 / 9;
+  }
+
+  /* Improve search for mobile */
+  .search-form {
+    gap: 8px;
+  }
+
+  .search-input {
+    padding: 10px 16px 10px 40px;
+  }
+
+  .search-button {
+    padding: 10px 16px;
+  }
+
+  /* Improve pagination for mobile */
+  .pagination {
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  .pagination-button {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .page-indicator {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Tablet improvements */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .content-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .movie-title-small {
+    font-size: 13px;
+  }
+
+  .modal-wrapper {
+    width: 90%;
+  }
+}
+
+/* Add this to the end of your existing CSS file */
+
+/* Error message styling */
+.error-message {
+  text-align: center;
+  padding: 48px 0;
+  color: #e50914;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  background-color: rgba(229, 9, 20, 0.05);
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.error-message p {
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+/* Offline indicator */
+.offline-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #e50914;
+  color: white;
+  text-align: center;
+  padding: 8px;
+  font-weight: 600;
+  z-index: 1000;
+}
+
+/* Improve modal scrolling on mobile */
+@media (max-width: 767px) {
+  .modal-overlay {
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+
+  .modal-wrapper {
+    max-height: 85vh;
+    margin-bottom: 20px;
+  }
+
+  .modal-content-flex {
+    flex-direction: column;
+  }
+
+  .modal-poster-section {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .modal-poster {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
+  .modal-details-section {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .cast-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recommendations-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Improve tablet layout */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .modal-poster-section {
+    width: 40%;
+  }
+
+  .modal-details-section {
+    width: 60%;
+  }
+}
+
+/* Hide the desktop genre container in mobile view
+.main-content > .genre-container {
+  display: none;
+} */

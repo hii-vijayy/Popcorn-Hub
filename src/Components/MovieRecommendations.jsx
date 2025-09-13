@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { apiRequest } from '../utils/api';
 
-function MovieRecommendations({ movieTitle, apiKey, onRecommendationClick }) {
+function MovieRecommendations({ movieTitle, onRecommendationClick }) {
   const [recommendations, setRecommendations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -14,16 +15,14 @@ function MovieRecommendations({ movieTitle, apiKey, onRecommendationClick }) {
         setIsLoading(true);
         setError(null);
         
-        // First try to get movie ID from TMDB
-        const searchResponse = await fetch(
-          `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(movieTitle)}&language=en-US&page=1&include_adult=false`
-        );
+        // First try to get movie ID from TMDB using the API utility
+        const searchData = await apiRequest('/search/movie', {
+          query: encodeURIComponent(movieTitle),
+          language: 'en-US',
+          page: 1,
+          include_adult: false
+        });
         
-        if (!searchResponse.ok) {
-          throw new Error('Failed to search for movie');
-        }
-        
-        const searchData = await searchResponse.json();
         if (!searchData.results || searchData.results.length === 0) {
           throw new Error('Movie not found');
         }
@@ -31,16 +30,11 @@ function MovieRecommendations({ movieTitle, apiKey, onRecommendationClick }) {
         // Get the first matching movie's ID
         const movieId = searchData.results[0].id;
         
-        // Fetch recommendations based on movie ID
-        const recommendationsResponse = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/recommendations?api_key=${apiKey}&language=en-US&page=1`
-        );
-        
-        if (!recommendationsResponse.ok) {
-          throw new Error('Failed to fetch recommendations');
-        }
-        
-        const recommendationsData = await recommendationsResponse.json();
+        // Fetch recommendations based on movie ID using the API utility
+        const recommendationsData = await apiRequest(`/movie/${movieId}/recommendations`, {
+          language: 'en-US',
+          page: 1
+        });
         
         // Limit to 6 recommendations and ensure they have poster paths
         const validRecommendations = recommendationsData.results
@@ -57,7 +51,7 @@ function MovieRecommendations({ movieTitle, apiKey, onRecommendationClick }) {
     };
     
     fetchRecommendations();
-  }, [movieTitle, apiKey]);
+  }, [movieTitle]);
 
   if (isLoading) {
     return <div className="recommendations-loading">Loading recommendations...</div>;
@@ -100,7 +94,6 @@ function MovieRecommendations({ movieTitle, apiKey, onRecommendationClick }) {
 
 MovieRecommendations.propTypes = {
   movieTitle: PropTypes.string,
-  apiKey: PropTypes.string.isRequired,
   onRecommendationClick: PropTypes.func.isRequired
 };
 

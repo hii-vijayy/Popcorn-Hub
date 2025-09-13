@@ -1,15 +1,48 @@
 import { useState } from 'react';
+import { getApiKey, apiRequest } from '../utils/api';
 
 const EnvChecker = () => {
   const [showDebug, setShowDebug] = useState(false);
+  const [testResult, setTestResult] = useState(null);
+  const [testing, setTesting] = useState(false);
 
+  const testApiKey = async () => {
+    setTesting(true);
+    setTestResult(null);
+    
+    try {
+      const data = await apiRequest('/discover/movie', {
+        sort_by: 'popularity.desc',
+        page: 1
+      });
+      
+      setTestResult({
+        success: true,
+        message: `✅ API Key works! Found ${data.results?.length || 0} movies`,
+        details: data.results?.[0]?.title || 'No movie title'
+      });
+    } catch (error) {
+      setTestResult({
+        success: false,
+        message: `❌ API Key test failed: ${error.message}`,
+        details: error.toString()
+      });
+    } finally {
+      setTesting(false);
+    }
+  };
+
+  const apiKey = getApiKey();
   const envInfo = {
     viteApiKey: import.meta.env.VITE_IMDB_APP_API_KEY,
     allViteEnv: import.meta.env,
     isDev: import.meta.env.DEV,
     mode: import.meta.env.MODE,
     isProd: import.meta.env.PROD,
-    nodeEnv: import.meta.env.NODE_ENV
+    nodeEnv: import.meta.env.NODE_ENV,
+    finalApiKey: apiKey,
+    userAgent: navigator.userAgent,
+    location: window.location.href
   };
 
   if (!showDebug) {
@@ -53,27 +86,66 @@ const EnvChecker = () => {
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
         <h4 style={{ margin: 0 }}>Environment Debug</h4>
-        <button 
-          onClick={() => setShowDebug(false)}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'white',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          ×
-        </button>
+        <div>
+          <button 
+            onClick={testApiKey}
+            disabled={testing}
+            style={{
+              background: testing ? '#666' : '#28a745',
+              border: 'none',
+              color: 'white',
+              cursor: testing ? 'not-allowed' : 'pointer',
+              fontSize: '10px',
+              padding: '4px 8px',
+              borderRadius: '3px',
+              marginRight: '8px'
+            }}
+          >
+            {testing ? 'Testing...' : 'Test API'}
+          </button>
+          <button 
+            onClick={() => setShowDebug(false)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              fontSize: '16px'
+            }}
+          >
+            ×
+          </button>
+        </div>
       </div>
+      
+      {testResult && (
+        <div style={{
+          backgroundColor: testResult.success ? '#28a745' : '#dc3545',
+          padding: '8px',
+          borderRadius: '4px',
+          marginBottom: '10px',
+          fontSize: '11px'
+        }}>
+          <div>{testResult.message}</div>
+          {testResult.details && (
+            <div style={{ opacity: 0.8, marginTop: '4px' }}>
+              {testResult.details}
+            </div>
+          )}
+        </div>
+      )}
       
       <div>
         <strong>API Key Status:</strong> {envInfo.viteApiKey ? '✅ Found' : '❌ Missing'}
       </div>
       
+      <div>
+        <strong>Final API Key:</strong> {envInfo.finalApiKey ? `${envInfo.finalApiKey.substring(0, 8)}...` : '❌ None'}
+      </div>
+      
       {envInfo.viteApiKey && (
         <div>
-          <strong>API Key:</strong> {envInfo.viteApiKey.substring(0, 8)}...
+          <strong>Vite API Key:</strong> {envInfo.viteApiKey.substring(0, 8)}...
         </div>
       )}
       
@@ -83,6 +155,14 @@ const EnvChecker = () => {
       
       <div>
         <strong>Environment:</strong> {envInfo.isDev ? 'Development' : 'Production'}
+      </div>
+      
+      <div>
+        <strong>Location:</strong> {envInfo.location}
+      </div>
+      
+      <div>
+        <strong>User Agent:</strong> {envInfo.userAgent.substring(0, 50)}...
       </div>
       
       <div>

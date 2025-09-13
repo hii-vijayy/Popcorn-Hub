@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FaSearch } from "react-icons/fa";
+import { getApiKey, apiRequest } from '../utils/api';
 
 function Search({ onSearch }) {
   const [state, setState] = useState('');
@@ -11,12 +12,12 @@ function Search({ onSearch }) {
     setState(query);
 
     if (query.length > 2) {
-      const apiKey = import.meta.env.VITE_IMDB_APP_API_KEY;
       try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}&language=en-US&page=1`
-        );
-        const data = await response.json();
+        const data = await apiRequest('/search/movie', {
+          query: query,
+          language: 'en-US',
+          page: 1
+        });
 
         if (data.results) {
           setSuggestions(data.results.slice(0, 5));

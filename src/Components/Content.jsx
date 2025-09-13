@@ -1,9 +1,8 @@
-"use client"
-
 import { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import MovieRecommendations from "../Components/MovieRecommendations"
 import { FaStar, FaCalendarAlt, FaUser, FaTimes } from "react-icons/fa"
+import { getApiKey, buildApiUrl } from "../utils/api"
 import "../App.css"
 // Genre lists
 const movieGenres = [
@@ -68,7 +67,7 @@ function Content({ movies }) {
   const [isMobileView, setIsMobileView] = useState(false);
   const [isTvShow, setIsTvShow] = useState(false);
   
-  const apiKey = import.meta.env.VITE_IMDB_APP_API_KEY;
+  const apiKey = getApiKey();
 
   // Reset state function
   const resetMovieDetails = () => {
@@ -88,9 +87,12 @@ function Content({ movies }) {
     
     // Then fetch full details for the recommended movie
     try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/movie/${recommendedMovie.id}?api_key=${apiKey}`
-      );
+      const response = await fetch(buildApiUrl(`/movie/${recommendedMovie.id}`));
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch recommendation details: ${response.status}`);
+      }
+      
       const movieData = await response.json();
       
       // Now open the modal with this movie
@@ -107,24 +109,20 @@ function Content({ movies }) {
   // Function to handle movie or TV show details
   const fetchMovieDetails = async (id, isTv) => {
     try {
-      const fetchMovie = isTv
-        ? fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${apiKey}`)
-        : fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`);
-
-      const response = await fetchMovie;
+      const movieUrl = buildApiUrl(isTv ? `/tv/${id}` : `/movie/${id}`);
+      const response = await fetch(movieUrl);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch movie details: ${response.status}`);
+      }
+      
       const data = await response.json();
 
-      // Fetch additional details
+      // Fetch additional details using buildApiUrl
       const [castResponse, trailerResponse, platformResponse] = await Promise.all([
-        fetch(isTv
-          ? `https://api.themoviedb.org/3/tv/${id}/credits?api_key=${apiKey}`
-          : `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`),
-        fetch(isTv
-          ? `https://api.themoviedb.org/3/tv/${id}/videos?api_key=${apiKey}`
-          : `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${apiKey}`),
-        fetch(isTv
-          ? `https://api.themoviedb.org/3/tv/${id}/watch/providers?api_key=${apiKey}`
-          : `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`),
+        fetch(buildApiUrl(isTv ? `/tv/${id}/credits` : `/movie/${id}/credits`)),
+        fetch(buildApiUrl(isTv ? `/tv/${id}/videos` : `/movie/${id}/videos`)),
+        fetch(buildApiUrl(isTv ? `/tv/${id}/watch/providers` : `/movie/${id}/watch/providers`)),
       ]);
 
       if (!castResponse.ok || !trailerResponse.ok || !platformResponse.ok) {
@@ -383,7 +381,6 @@ function Content({ movies }) {
                 {!isTvShow && selectedMovie.title && (
                   <MovieRecommendations 
                     movieTitle={selectedMovie.title}
-                    apiKey={apiKey}
                     onRecommendationClick={handleRecommendationClick}
                   />
                 )}

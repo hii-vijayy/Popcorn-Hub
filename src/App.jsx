@@ -9,6 +9,7 @@ import Footer from "./Components/Footer"
 import Genre from "./Components/Genre"
 import LoadingScreen from "./Components/LoadingScreen"
 import EnvChecker from "./Components/EnvChecker"
+import { getApiKey, buildApiUrl } from "./utils/api"
 import { FaChevronLeft, FaChevronRight, FaBars, FaTimes } from "react-icons/fa"
 import "./App.css"
 
@@ -23,23 +24,7 @@ function App() {
   const [error, setError] = useState(null)
   const [retryCount, setRetryCount] = useState(0)
   
-  // Try multiple ways to get the API key with fallbacks
-  const getApiKey = () => {
-    // Primary: Vite environment variable
-    const viteKey = import.meta.env.VITE_IMDB_APP_API_KEY;
-    
-    // Fallback: Direct environment access (for some deployment scenarios)
-    const processKey = typeof process !== 'undefined' && process.env?.VITE_IMDB_APP_API_KEY;
-    
-    // Fallback: Window environment (if set globally)
-    const windowKey = typeof window !== 'undefined' && window.VITE_IMDB_APP_API_KEY;
-    
-    // Hardcoded fallback for immediate testing (remove after fixing environment variables)
-    const fallbackKey = '2e8b6be7ebee565f43dd82741f433c6f';
-    
-    return viteKey || processKey || windowKey || fallbackKey;
-  };
-  
+  // Use centralized API key function
   const apiKey = getApiKey();
 
   // Debug logging for environment variables
@@ -115,23 +100,41 @@ function App() {
       
       // Movie URL
       if (!isTvShow) {
-        url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&sort_by=popularity.desc&page=${page}`;
-        
         if (searchQuery) {
-          url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(searchQuery)}&page=${page}`;
+          url = buildApiUrl('/search/movie', {
+            query: encodeURIComponent(searchQuery),
+            page: page
+          });
         } else if (selectedGenre) {
-          url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${selectedGenre}&page=${page}`;
+          url = buildApiUrl('/discover/movie', {
+            with_genres: selectedGenre,
+            page: page
+          });
+        } else {
+          url = buildApiUrl('/discover/movie', {
+            sort_by: 'popularity.desc',
+            page: page
+          });
         }
       } 
       
       // TV Show URL
       else {
-        url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&sort_by=popularity.desc&page=${page}`;
-        
         if (searchQuery) {
-          url = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&query=${encodeURIComponent(searchQuery)}&page=${page}`;
+          url = buildApiUrl('/search/tv', {
+            query: encodeURIComponent(searchQuery),
+            page: page
+          });
         } else if (selectedGenre) {
-          url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&with_genres=${selectedGenre}&page=${page}`;
+          url = buildApiUrl('/discover/tv', {
+            with_genres: selectedGenre,
+            page: page
+          });
+        } else {
+          url = buildApiUrl('/discover/tv', {
+            sort_by: 'popularity.desc',
+            page: page
+          });
         }
       }
 

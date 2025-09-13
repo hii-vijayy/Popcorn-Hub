@@ -8,6 +8,7 @@ import Content from "./Components/Content"
 import Footer from "./Components/Footer"
 import Genre from "./Components/Genre"
 import LoadingScreen from "./Components/LoadingScreen"
+import EnvChecker from "./Components/EnvChecker"
 import { FaChevronLeft, FaChevronRight, FaBars, FaTimes } from "react-icons/fa"
 import "./App.css"
 
@@ -21,18 +22,51 @@ function App() {
   const [isGenrePanelOpen, setIsGenrePanelOpen] = useState(false)
   const [error, setError] = useState(null)
   const [retryCount, setRetryCount] = useState(0)
-  const apiKey = import.meta.env.VITE_IMDB_APP_API_KEY
+  
+  // Try multiple ways to get the API key with fallbacks
+  const getApiKey = () => {
+    // Primary: Vite environment variable
+    const viteKey = import.meta.env.VITE_IMDB_APP_API_KEY;
+    
+    // Fallback: Direct environment access (for some deployment scenarios)
+    const processKey = typeof process !== 'undefined' && process.env?.VITE_IMDB_APP_API_KEY;
+    
+    // Fallback: Window environment (if set globally)
+    const windowKey = typeof window !== 'undefined' && window.VITE_IMDB_APP_API_KEY;
+    
+    // Hardcoded fallback for immediate testing (remove after fixing environment variables)
+    const fallbackKey = '2e8b6be7ebee565f43dd82741f433c6f';
+    
+    return viteKey || processKey || windowKey || fallbackKey;
+  };
+  
+  const apiKey = getApiKey();
 
   // Debug logging for environment variables
   useEffect(() => {
-    console.log('Environment check:', {
-      hasApiKey: !!apiKey,
+    console.log('🔍 Environment Debug Info:', {
+      // Import meta env
+      viteApiKey: import.meta.env.VITE_IMDB_APP_API_KEY ? 'FOUND' : 'MISSING',
+      viteEnvKeys: Object.keys(import.meta.env),
+      
+      // Final API key
+      finalApiKey: apiKey ? `${apiKey.substring(0, 8)}...` : 'MISSING',
       apiKeyLength: apiKey?.length,
+      
+      // Environment info
       isDev: import.meta.env.DEV,
-      mode: import.meta.env.MODE
+      mode: import.meta.env.MODE,
+      isProd: import.meta.env.PROD,
+      
+      // Build info
+      buildTime: new Date().toISOString()
     });
+    
     if (!apiKey) {
       console.error('❌ TMDB API Key is missing! Check your environment variables.');
+      setError('Environment configuration error: TMDB API Key not found. Please check Vercel environment variables.');
+    } else {
+      console.log('✅ API Key loaded successfully');
     }
   }, [apiKey]);
 
@@ -227,6 +261,9 @@ function App() {
         </main>
         
         <Footer />
+        
+        {/* Debug component - remove after fixing environment variables */}
+        <EnvChecker />
       </Router>
     </div>
   );

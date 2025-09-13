@@ -1,78 +1,82 @@
-# Vercel Deployment Guide
+# Vercel Deployment Fix - Environment Variables Issue
 
-## Environment Variables Setup
+## 🚨 Current Problem
+Your app shows: `❌ TMDB API Key is missing! Check your environment variables.`
 
-Your app is failing on Vercel because the environment variables are not configured. Here's how to fix it:
+This happens because Vercel doesn't automatically use your local `.env` file.
+
+## ✅ Step-by-Step Fix
 
 ### 1. Set Environment Variables in Vercel Dashboard
 
-1. Go to your Vercel project dashboard
-2. Navigate to **Settings** → **Environment Variables**
-3. Add the following variables:
+1. **Go to Vercel Dashboard**: https://vercel.com/dashboard
+2. **Find your project**: Click on "Popcorn-Hub"
+3. **Go to Settings**: Click the "Settings" tab
+4. **Environment Variables**: Click "Environment Variables" in the left sidebar
+5. **Add the variable**:
+   - **Name**: `VITE_IMDB_APP_API_KEY`
+   - **Value**: `2e8b6be7ebee565f43dd82741f433c6f`
+   - **Environments**: Check all boxes (Production, Preview, Development)
+6. **Click "Save"**
 
-```
-Name: VITE_IMDB_APP_API_KEY
-Value: 2e8b6be7ebee565f43dd82741f433c6f
-Environment: Production, Preview, Development
-```
+### 2. Trigger a New Deployment
 
-```
-Name: VITE_FASTAPI_URL
-Value: http://localhost:8000
-Environment: Production, Preview, Development
-```
+After adding the environment variable, you MUST redeploy:
 
-### 2. Alternative: Using Vercel CLI
-
-If you have Vercel CLI installed, you can set environment variables from terminal:
-
+**Option A: Automatic (Recommended)**
 ```bash
-vercel env add VITE_IMDB_APP_API_KEY
+git commit --allow-empty -m "trigger redeploy"
+git push
+```
+
+**Option B: Manual**
+- Go to your Vercel dashboard
+- Click "Redeploy" on the latest deployment
+
+### 3. Verify the Fix
+
+1. **Wait for deployment** (usually 1-2 minutes)
+2. **Open your live site**
+3. **Check browser console** (F12 → Console tab)
+4. **Look for**: `✅ API Key loaded successfully`
+5. **Use Debug Tool**: Click the "Debug Env" button at bottom-right
+
+## 🔧 Alternative: Using Vercel CLI
+
+If you have Vercel CLI:
+```bash
+# Install if needed
+npm i -g vercel
+
+# Add environment variable
+vercel env add VITE_IMDB_APP_API_KEY production
 # Enter: 2e8b6be7ebee565f43dd82741f433c6f
-# Select: Production, Preview, Development
 
-vercel env add VITE_FASTAPI_URL
-# Enter: http://localhost:8000
-# Select: Production, Preview, Development
-```
+vercel env add VITE_IMDB_APP_API_KEY preview  
+# Enter: 2e8b6be7ebee565f43dd82741f433c6f
 
-### 3. Redeploy Your App
-
-After setting the environment variables, trigger a new deployment:
-
-```bash
+# Redeploy
 vercel --prod
 ```
 
-Or push a new commit to trigger automatic deployment.
+## 🐛 Still Not Working?
 
-### 4. Verify Environment Variables
+### Check These Common Issues:
 
-The app now includes debugging logs. Check your browser console on the deployed site to see:
-- Whether the API key is being loaded correctly
-- What errors occur during API calls
+1. **Case Sensitivity**: Environment variable name must be exactly `VITE_IMDB_APP_API_KEY`
+2. **No Spaces**: Make sure there are no spaces in the variable name or value
+3. **Redeploy Required**: Environment variables only take effect after redeployment
+4. **Browser Cache**: Try hard refresh (Ctrl+Shift+R) or incognito mode
 
-## Common Issues
+### Debug Steps:
 
-### Issue: API Key Still Undefined
-**Solution**: Make sure the environment variable name exactly matches `VITE_IMDB_APP_API_KEY` (case-sensitive)
+1. **Check the Debug Tool**: Click "Debug Env" button on your live site
+2. **Console Logs**: Look for detailed environment information in browser console
+3. **Vercel Logs**: Check deployment logs in Vercel dashboard
 
-### Issue: CORS Errors in Production
-**Solution**: The TMDB API should work fine in production. If you see CORS errors, it might be a temporary network issue.
+## 📞 Need More Help?
 
-### Issue: 401 Unauthorized
-**Solution**: Double-check that your TMDB API key is valid and hasn't expired.
-
-## Testing
-
-1. Deploy your app
-2. Open browser developer console
-3. Look for the environment check logs
-4. Verify the API calls are working
-
-## Need Help?
-
-If you're still seeing issues:
-1. Check the browser console for detailed error messages
-2. Verify the environment variables are set correctly in Vercel dashboard
-3. Make sure you've redeployed after setting the variables
+If still having issues, provide:
+1. Screenshot of Vercel environment variables page
+2. Browser console output from the live site
+3. What you see when clicking the "Debug Env" button

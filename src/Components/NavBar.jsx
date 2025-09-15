@@ -1,26 +1,215 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
+import "./Navbar.css";
 
 const Navbar = () => {
-  const handleLogoClick = () => {
-    if (window.location.pathname === "/home") {
-      window.location.reload();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { searchQuery, actions } = useAppContext();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      setScrolled(offset > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
+
+  // Sync local search query with context
+  useEffect(() => {
+    setLocalSearchQuery(searchQuery);
+  }, [searchQuery]);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const query = localSearchQuery.trim();
+
+    if (query) {
+      actions.search(query);
+      if (location.pathname !== "/search") {
+        navigate("/search");
+      }
     }
   };
 
+  const handleSearchChange = (e) => {
+    setLocalSearchQuery(e.target.value);
+  };
+
+  const handleClearSearch = () => {
+    setLocalSearchQuery("");
+    actions.clearSearch();
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const navItems = [
+    { path: "/", label: "Home", icon: "🏠" },
+    { path: "/search", label: "Search", icon: "🔍" },
+    { path: "/movies", label: "Movies", icon: "🎬" },
+    { path: "/tv-shows", label: "TV Shows", icon: "📺" },
+    { path: "/trending", label: "Trending", icon: "🔥" },
+  ];
+
   return (
-    <div className="navbar-container">
-      <div className="navbar-inner">
-        <Link
-          to="/home"
-          onClick={handleLogoClick}
-          className="navbar-logo-link"
-          style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
-          <img src="popcornhublogo.png" alt="Logo" className="navbar-logo-icon" />
-          <span className="navbar-title">POPCORN HUB</span>
+    <nav className={`navbar ${scrolled ? "navbar--scrolled" : ""}`}>
+      <div className="navbar__container container">
+        {/* Logo */}
+        <Link to="/" className="navbar__logo">
+          <img
+            className="navbar__logo-icon"
+            src="public/popcornhublogo.png"
+            alt=""
+          />
+          <span className="navbar__logo-text">PopcornHub</span>
         </Link>
+
+        {/* Search Bar */}
+        <form className="navbar__search" onSubmit={handleSearchSubmit}>
+          <div className="search-input-group">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search movies, TV shows..."
+              value={localSearchQuery}
+              onChange={handleSearchChange}
+              autoComplete="off"
+            />
+            {localSearchQuery && (
+              <button
+                type="button"
+                className="search-clear"
+                onClick={handleClearSearch}
+                aria-label="Clear search"
+              >
+                ✕
+              </button>
+            )}
+            <button type="submit" className="search-submit" aria-label="Search">
+              🔍
+            </button>
+          </div>
+        </form>
+
+        {/* Desktop Navigation */}
+        <ul className="navbar__nav">
+          {navItems.map((item) => (
+            <li key={item.path} className="navbar__nav-item">
+              <Link
+                to={item.path}
+                className={`navbar__nav-link ${
+                  location.pathname === item.path
+                    ? "navbar__nav-link--active"
+                    : ""
+                }`}
+              >
+                <span className="navbar__nav-icon">{item.icon}</span>
+                <span className="navbar__nav-text">{item.label}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* Mobile Menu Button */}
+        <button
+          className={`navbar__mobile-toggle ${
+            isMobileMenuOpen ? "navbar__mobile-toggle--active" : ""
+          }`}
+          onClick={toggleMobileMenu}
+          aria-label="Toggle mobile menu"
+        >
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+        </button>
+
+        {/* Mobile Menu */}
+        <div
+          className={`navbar__mobile ${
+            isMobileMenuOpen ? "navbar__mobile--open" : ""
+          }`}
+        >
+          <div className="navbar__mobile-content">
+            {/* Mobile Search */}
+            <form
+              className="navbar__mobile-search"
+              onSubmit={handleSearchSubmit}
+            >
+              <div className="search-input-group">
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Search movies, TV shows..."
+                  value={localSearchQuery}
+                  onChange={handleSearchChange}
+                  autoComplete="off"
+                />
+                {localSearchQuery && (
+                  <button
+                    type="button"
+                    className="search-clear"
+                    onClick={handleClearSearch}
+                    aria-label="Clear search"
+                  >
+                    ✕
+                  </button>
+                )}
+                <button
+                  type="submit"
+                  className="search-submit"
+                  aria-label="Search"
+                >
+                  🔍
+                </button>
+              </div>
+            </form>
+
+            {/* Mobile Navigation */}
+            <ul className="navbar__mobile-nav">
+              {navItems.map((item) => (
+                <li key={item.path} className="navbar__mobile-nav-item">
+                  <Link
+                    to={item.path}
+                    className={`navbar__mobile-nav-link ${
+                      location.pathname === item.path
+                        ? "navbar__mobile-nav-link--active"
+                        : ""
+                    }`}
+                  >
+                    <span className="navbar__mobile-nav-icon">{item.icon}</span>
+                    <span className="navbar__mobile-nav-text">
+                      {item.label}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <div
+            className="navbar__mobile-overlay"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
       </div>
-    </div>
+    </nav>
   );
 };
 

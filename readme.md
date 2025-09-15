@@ -1,139 +1,220 @@
-# 🍿 Popcorn Hub
+# 🍿 PopcornHub - Modern Movie & TV Show Discovery PlatformA beautiful, responsive React application for discovering movies and TV shows, built from scratch with modern design principles and best practices.## ✨ Features### 🎬 Content Discovery- **Popular Movies & TV Shows**: Browse trending and popular content- **Advanced Search**: Search across movies, TV shows, and people- **Detailed Information**: Comprehensive details including cast, crew, trailers, and reviews- **Responsive Design**: Perfect experience on desktop, tablet, and mobile devices### 🎨 Modern UI/UX
 
-> A modern movie discovery platform combining React + FastAPI + Machine Learning for intelligent movie recommendations.
+- **Dark Theme**: Beautiful dark mode design with gradient accents
+- **Smooth Animations**: Fluid transitions and hover effects
+- **Mobile-First**: Responsive design that works on all devices
+- **Accessibility**: WCAG compliant with keyboard navigation and screen reader support
 
-![PopcornHub Output](src/assets/Popcorn-Hub.png)
-![Movie Card](src/assets/Movei-Card.png)
-![Movie Suggestions](src/assets/Recommendations.png)
+### 🚀 Performance
 
-## 🌟 Features
-
-### 🎬 Core Functionality
-- **Multi-Genre Browsing** – Bollywood, Hollywood, Punjabi & more
-- **Smart Search** – Find movies by title across all genres
-- **Pagination** – Smooth navigation through movie collections
-- **Responsive Design** – Mobile & desktop optimized
-
-### 🤖 AI-Based Recommendations
-- **Content-Based Suggestions** – Based on movie similarities
-- **Personalized Feed** *(Coming Soon)* – Watch-history-driven
-- **Movie DNA Analysis** – Using NLP on metadata (genre, cast, crew)
+- **Fast Loading**: Optimized images and lazy loading
+- **Smooth Navigation**: Client-side routing with React Router
+- **Error Handling**: Graceful error states with fallbacks
+- **SEO Optimized**: Proper meta tags and semantic HTML
 
 ## 🛠️ Tech Stack
 
-| Layer | Tech |
-|--------------|----------------------------------------------------------------------|
-| **Frontend** | React, HTML, CSS, JavaScript, React Router |
-| **Backend** | FastAPI, Python 3.10+, scikit-learn, Pandas |
-| **APIs** | TMDB API, Custom ML Recommender Engine |
-| **Hosting** | Vercel (Frontend) |
+### Frontend
+
+- **React 18** - Latest React with hooks and context
+- **React Router 6** - Client-side routing
+- **CSS3** - Modern CSS with custom properties and flexbox/grid
+- **Vite** - Lightning-fast build tool
+
+### Backend Integration
+
+- **TMDB API** - The Movie Database API for content data
+- **Axios** - HTTP client for API requests
+
+### Development Tools
+
+- **ESLint** - Code linting and formatting
+- **Modern JavaScript** - ES6+ features
+- **Component Architecture** - Reusable and maintainable components
 
 ## 🚀 Getting Started
 
-### ✅ Prerequisites
-- Node.js v16+
-- Python 3.10+
-- TMDB API key
+### Prerequisites
 
-### 🧩 Installation
+- Node.js (v14 or higher)
+- npm or yarn
+- TMDB API key (optional - demo key included)
 
-1. **Clone Repositories**
-```bash
-git clone https://github.com/yourusername/popcorn-hub-frontend.git
-git clone https://github.com/yourusername/movie-recommender-fastapi.git
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/your-username/popcorn-hub.git
+   cd popcorn-hub
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure API Key (Optional)**
+
+   - Get your free API key from [TMDB](https://www.themoviedb.org/settings/api)
+   - Replace the demo key in `src/services/tmdbService.js`
+
+4. **Start the development server**
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Open your browser**
+   - Navigate to `http://localhost:5173`
+   - Enjoy exploring movies and TV shows! 🎉
+
+## 📱 Responsive Design
+
+The application is fully responsive and optimized for:
+
+- **Mobile Devices** (320px - 768px)
+- **Tablets** (768px - 1024px)
+- **Desktop** (1024px+)
+
+## 🎨 Key Design Features
+
+### Navigation
+
+- **Fixed Header**: Always accessible navigation
+- **Mobile Menu**: Hamburger menu for smaller screens
+- **Search Integration**: Global search functionality
+- **Active States**: Visual feedback for current page
+
+### Content Cards
+
+- **Hover Effects**: Smooth animations on interaction
+- **Rating Display**: Visual rating system
+- **Lazy Loading**: Optimized image loading
+- **Skeleton States**: Loading placeholders
+
+### Modal Experience
+
+- **Detailed View**: Rich content details in overlay
+- **Responsive Layout**: Adapts to screen size
+- **Keyboard Navigation**: ESC key and focus management
+- **Video Integration**: Embedded trailers
+
+## 🏗️ Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── Navbar/         # Navigation component
+│   ├── ContentCard/    # Movie/TV card component
+│   ├── ContentGrid/    # Grid layout component
+│   └── Modal/          # Detail modal component
+├── pages/              # Page components
+│   ├── HomePage/       # Landing page
+│   └── SearchPage/     # Search results page
+├── context/            # React context for state
+├── services/           # API services
+├── hooks/              # Custom React hooks
+└── styles/             # Global styles and variables
 ```
 
-2. **Frontend Setup**
-```bash
-cd popcorn-hub-frontend
-npm install
-```
+## 🎯 Component Architecture
 
-3. **Backend Setup**
-```bash
-cd ../movie-recommender-fastapi
-python -m venv venv
-source venv/bin/activate  # For Linux/Mac
-# OR
-venv\Scripts\activate  # For Windows
-pip install -r requirements.txt
-```
+### Reusable Components
 
-4. **Environment Variables**  
-   Create `.env.local` in the frontend root:
-```
-VITE_IMDB_APP_API_KEY=your_tmdb_key
-VITE_FASTAPI_URL=http://localhost:8000
-```
+- **ContentCard**: Flexible card for movies/TV shows
+- **ContentGrid**: Responsive grid with loading states
+- **Modal**: Accessible modal with rich content
+- **Navbar**: Responsive navigation with search
 
-### 🏃 Running the Application
+### Custom Hooks
 
-1. **Start Backend**
-```bash
-uvicorn main:app --reload
-```
+- **useContentDetails**: Fetch and format content details
+- **useAppContext**: Global state management
 
-2. **Start Frontend**
-```bash
-npm run dev
-```
+### Context Management
 
-Visit `http://localhost:3000` to explore!
+- Centralized state with React Context
+- Actions for API calls and state updates
+- Error handling and loading states
 
-## 🧠 How Our Recommendation System Works
+## 📈 Performance Optimizations
 
-```mermaid
-graph TD
-A[User Input] --> B(TMDb Data)
-B --> C[Feature Engineering]
-C --> D[NLP Vectorization]
-D --> E[Cosine Similarity]
-E --> F[Recommended Movies]
-```
+### Image Optimization
 
-## 📁 Project Structure
+- **Multiple Sizes**: Responsive image sources
+- **Lazy Loading**: Images load as needed
+- **Placeholder Images**: Fallbacks for missing images
+- **WebP Support**: Modern image formats
 
-```
-popcorn-hub/
-├── frontend/ # React App
-│   ├── public/
-│   └── src/
-│       ├── components/
-│       ├── lib/
-│       └── types/
-│
-├── backend/ # FastAPI Backend
-│   ├── data/
-│   ├── models/
-│   ├── routes/
-│   └── recommender.py
-│
-└── datasets/
-    ├── tmdb_5000_movies.csv
-    └── tmdb_5000_credits.csv
-```
+### Code Splitting
 
-## 🚧 Limitations & Roadmap
+- **Route-based Splitting**: Lazy load pages
+- **Component Optimization**: Memoization where needed
+- **Bundle Analysis**: Optimized build output
 
-**Current Limitations**
-- Requires exact movie title match
-- Dataset limited to 5000 entries
+### Caching Strategy
 
-**Upcoming Features**
-- [ ] TF-IDF vectorization
-- [ ] Fuzzy search / partial match
-- [ ] Real-time collaborative filtering
-- [ ] Dark mode toggle
-- [ ] User ratings
+- **API Response Caching**: Reduced API calls
+- **Browser Caching**: Optimized cache headers
+- **Static Asset Caching**: Long-term caching
 
-## 📚 Resources
-- [TMDB Dataset (Kaggle)](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata)
-- [FastAPI Deployment Guide](https://fastapi.tiangolo.com/deployment/)
-- [React Performance Doc](https://react.dev/learn/optimizing-performance)
+## 🌐 Browser Support
 
-## 📜 License
-This project is licensed under the MIT License.
+- **Modern Browsers**: Chrome, Firefox, Safari, Edge
+- **Mobile Browsers**: iOS Safari, Chrome Mobile
+- **Accessibility**: NVDA, JAWS, VoiceOver compatible
+
+## 🔧 Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## 🎨 Customization
+
+### Theming
+
+- CSS custom properties for easy theming
+- Consistent color palette throughout
+- Easy to modify spacing and typography
+
+### Configuration
+
+- API endpoints easily configurable
+- Environment-based settings
+- Flexible component props
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **TMDB** for providing the excellent movie database API
+- **React Team** for the amazing framework
+- **Vite** for the lightning-fast build tool
+- **The Open Source Community** for inspiration and tools
+
+## 📧 Contact
+
+- **Email**: your.email@example.com
+- **LinkedIn**: [Your LinkedIn Profile](https://linkedin.com/in/yourprofile)
+- **Portfolio**: [Your Portfolio Website](https://yourportfolio.com)
 
 ---
 
-Made with ❤️ by Vijay Kumar
+<div align="center">
+  <p>Made with ❤️ and lots of ☕</p>
+  <p>⭐ Star this repo if you found it helpful!</p>
+</div>

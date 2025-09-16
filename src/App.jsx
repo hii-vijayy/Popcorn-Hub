@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { AppProvider } from "./context/AppContext";
 import HomePage from "./pages/HomePage";
-import Navbar from "./Components/Navbar";
+import Navbar from "./Components/NavBar";
 import MoviesPage from "./pages/MoviesPage";
 import TVShowsPage from "./pages/TVShowsPage";
 import TrendingPage from "./pages/TrendingPage";

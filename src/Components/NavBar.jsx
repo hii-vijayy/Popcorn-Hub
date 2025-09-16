@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import "./Navbar.css";
+import logo from "../assets/popcornhublogo.png";
 
 const Navbar = () => {
   const location = useLocation();
@@ -72,11 +73,7 @@ const Navbar = () => {
       <div className="navbar__container container">
         {/* Logo */}
         <Link to="/" className="navbar__logo" onClick={handleHomeClick}>
-          <img
-            className="navbar__logo-icon"
-            src="public/popcornhublogo.png"
-            alt=""
-          />
+          <img className="navbar__logo-icon" src={logo} alt="" />
           <span className="navbar__logo-text">PopcornHub</span>
         </Link>
         {/* Search Bar */}

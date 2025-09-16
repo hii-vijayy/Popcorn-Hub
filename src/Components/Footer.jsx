@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Footer.css";
-
+import logo from "../assets/popcornhublogo.png";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const footerLinks = [
@@ -67,11 +67,7 @@ const Footer = () => {
           {/* Logo and Description */}
           <div className="footer__brand">
             <div className="footer__logo">
-              <img
-                className="footer-logo-img"
-                src="public/popcornhublogo.png"
-                alt="Popcorn Icon"
-              />
+              <img className="footer-logo-img" src={logo} alt="Popcorn Icon" />
               <span className="footer__logo-text">PopcornHub</span>
             </div>
             <p className="footer__description">

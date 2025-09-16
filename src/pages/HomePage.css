@@ -1,5 +1,5 @@
 /* Import ContentGrid styles for load more button */
-@import "../components/ContentGrid.css";
+@import "../Components/ContentGrid.css";
 /* Loading Animation for Load More Button */
 .load-more-btn.loading {
   opacity: 0.7;

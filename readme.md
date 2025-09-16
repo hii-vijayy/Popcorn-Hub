@@ -55,10 +55,20 @@
    npm install
    ```
 
-3. **Configure API Key (Optional)**
+3. **Configure Environment Variables**
+
+   - Copy the environment template:
+
+     ```bash
+     cp .env.example .env
+     ```
 
    - Get your free API key from [TMDB](https://www.themoviedb.org/settings/api)
-   - Replace the demo key in `src/services/tmdbService.js`
+   - Open `.env` and replace `your_tmdb_api_key_here` with your actual API key
+
+   ```env
+   VITE_TMDB_API_KEY=your_actual_api_key_here
+   ```
 
 4. **Start the development server**
 
@@ -69,6 +79,16 @@
 5. **Open your browser**
    - Navigate to `http://localhost:5173`
    - Enjoy exploring movies and TV shows! 🎉
+
+## 🔐 Environment Variables
+
+For security and deployment flexibility, API keys are stored in environment variables:
+
+- `VITE_TMDB_API_KEY` - Your TMDB API key
+- `VITE_TMDB_BASE_URL` - TMDB API base URL (default provided)
+- `VITE_TMDB_IMAGE_BASE_URL` - TMDB images base URL (default provided)
+
+See [ENV_SETUP.md](ENV_SETUP.md) for detailed setup instructions and deployment guide.
 
 ## 📱 Responsive Design
 

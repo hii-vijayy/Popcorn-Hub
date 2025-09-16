@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/assets/(.*)",
+      "headers": {
+        "cache-control": "max-age=31536000"
+      }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "VITE_TMDB_API_KEY": "@tmdb_api_key",
+    "VITE_TMDB_BASE_URL": "https://api.themoviedb.org/3",
+    "VITE_TMDB_IMAGE_BASE_URL": "https://image.tmdb.org/t/p",
+    "VITE_YOUTUBE_WATCH_BASE_URL": "https://www.youtube.com/watch",
+    "VITE_YOUTUBE_EMBED_BASE_URL": "https://www.youtube.com/embed",
+    "VITE_YOUTUBE_THUMBNAIL_BASE_URL": "https://img.youtube.com/vi"
+  },
+  "build": {
+    "env": {
+      "VITE_TMDB_API_KEY": "@tmdb_api_key"
+    }
+  }
+}

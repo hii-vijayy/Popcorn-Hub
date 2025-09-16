@@ -4,7 +4,6 @@ import "./Footer.css";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-
   const footerLinks = [
     {
       title: "Explore",
@@ -13,7 +12,6 @@ const Footer = () => {
         { name: "Movies", path: "/movies", icon: "🎬" },
         { name: "TV Shows", path: "/tv-shows", icon: "📺" },
         { name: "Trending", path: "/trending", icon: "🔥" },
-        { name: "Search", path: "/search", icon: "🔍" },
       ],
     },
     {
@@ -89,7 +87,6 @@ const Footer = () => {
               </p>
             </div>
           </div>
-
           {/* Footer Links */}
           <div className="footer__links">
             {footerLinks.map((section, index) => (
@@ -150,7 +147,6 @@ const Footer = () => {
             ))}
           </div>
         </div>
-
         {/* Footer Bottom */}
         <div className="footer__bottom">
           <div className="footer__credits">
@@ -185,7 +181,6 @@ const Footer = () => {
               </a>
             </p>
           </div>
-
           <div className="footer__tech-info">
             <p className="footer__tech-stack">
               Built with{" "}
@@ -205,7 +200,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-
       {/* Animated Background */}
       <div className="footer__bg-animation" aria-hidden="true">
         <div className="footer__bg-circle footer__bg-circle--1"></div>

@@ -17,7 +17,6 @@ const Navbar = () => {
       const offset = window.scrollY;
       setScrolled(offset > 50);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -27,25 +26,24 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
-  // Sync local search query with context
-  useEffect(() => {
-    setLocalSearchQuery(searchQuery);
-  }, [searchQuery]);
-
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const query = localSearchQuery.trim();
-
     if (query) {
       actions.search(query);
-      if (location.pathname !== "/search") {
-        navigate("/search");
-      }
+      navigate("/"); // Navigate to home page to display search results
+      setLocalSearchQuery(""); // Clear search bar after submission
     }
   };
 
   const handleSearchChange = (e) => {
     setLocalSearchQuery(e.target.value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearchSubmit(e);
+    }
   };
 
   const handleClearSearch = () => {
@@ -57,9 +55,13 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleHomeClick = () => {
+    actions.clearSearch();
+    navigate("/");
+  };
+
   const navItems = [
     { path: "/", label: "Home", icon: "🏠" },
-    { path: "/search", label: "Search", icon: "🔍" },
     { path: "/movies", label: "Movies", icon: "🎬" },
     { path: "/tv-shows", label: "TV Shows", icon: "📺" },
     { path: "/trending", label: "Trending", icon: "🔥" },
@@ -69,7 +71,7 @@ const Navbar = () => {
     <nav className={`navbar ${scrolled ? "navbar--scrolled" : ""}`}>
       <div className="navbar__container container">
         {/* Logo */}
-        <Link to="/" className="navbar__logo">
+        <Link to="/" className="navbar__logo" onClick={handleHomeClick}>
           <img
             className="navbar__logo-icon"
             src="public/popcornhublogo.png"
@@ -77,7 +79,6 @@ const Navbar = () => {
           />
           <span className="navbar__logo-text">PopcornHub</span>
         </Link>
-
         {/* Search Bar */}
         <form className="navbar__search" onSubmit={handleSearchSubmit}>
           <div className="search-input-group">
@@ -87,6 +88,7 @@ const Navbar = () => {
               placeholder="Search movies, TV shows..."
               value={localSearchQuery}
               onChange={handleSearchChange}
+              onKeyDown={handleKeyDown}
               autoComplete="off"
             />
             {localSearchQuery && (
@@ -104,7 +106,6 @@ const Navbar = () => {
             </button>
           </div>
         </form>
-
         {/* Desktop Navigation */}
         <ul className="navbar__nav">
           {navItems.map((item) => (
@@ -116,6 +117,7 @@ const Navbar = () => {
                     ? "navbar__nav-link--active"
                     : ""
                 }`}
+                onClick={item.path === "/" ? handleHomeClick : undefined}
               >
                 <span className="navbar__nav-icon">{item.icon}</span>
                 <span className="navbar__nav-text">{item.label}</span>
@@ -123,7 +125,6 @@ const Navbar = () => {
             </li>
           ))}
         </ul>
-
         {/* Mobile Menu Button */}
         <button
           className={`navbar__mobile-toggle ${
@@ -136,7 +137,6 @@ const Navbar = () => {
           <span className="hamburger-line"></span>
           <span className="hamburger-line"></span>
         </button>
-
         {/* Mobile Menu */}
         <div
           className={`navbar__mobile ${
@@ -156,6 +156,7 @@ const Navbar = () => {
                   placeholder="Search movies, TV shows..."
                   value={localSearchQuery}
                   onChange={handleSearchChange}
+                  onKeyDown={handleKeyDown}
                   autoComplete="off"
                 />
                 {localSearchQuery && (
@@ -177,7 +178,6 @@ const Navbar = () => {
                 </button>
               </div>
             </form>
-
             {/* Mobile Navigation */}
             <ul className="navbar__mobile-nav">
               {navItems.map((item) => (
@@ -189,6 +189,7 @@ const Navbar = () => {
                         ? "navbar__mobile-nav-link--active"
                         : ""
                     }`}
+                    onClick={item.path === "/" ? handleHomeClick : undefined}
                   >
                     <span className="navbar__mobile-nav-icon">{item.icon}</span>
                     <span className="navbar__mobile-nav-text">
@@ -200,7 +201,6 @@ const Navbar = () => {
             </ul>
           </div>
         </div>
-
         {/* Mobile Menu Overlay */}
         {isMobileMenuOpen && (
           <div

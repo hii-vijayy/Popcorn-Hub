@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { tmdbService, imageUtils, tmdbUtils } from "../services/tmdbService";
+import {
+  tmdbService,
+  imageUtils,
+  tmdbUtils,
+  youtubeUtils,
+} from "../services/tmdbService";
 import "./Modal.css";
 const Modal = ({ isOpen, onClose, contentId, contentType = "movie" }) => {
   const [content, setContent] = useState(null);
@@ -244,7 +249,7 @@ const Modal = ({ isOpen, onClose, contentId, contentType = "movie" }) => {
                     <div className="video-thumbnail">
                       {" "}
                       <img
-                        src={`https://img.youtube.com/vi/${video.key}/maxresdefault.jpg`}
+                        src={youtubeUtils.getThumbnailUrl(video.key)}
                         alt={video.name}
                         className="thumbnail-image"
                         loading="lazy"
@@ -255,7 +260,7 @@ const Modal = ({ isOpen, onClose, contentId, contentType = "movie" }) => {
                           className="play-video-button"
                           onClick={() =>
                             window.open(
-                              `https://www.youtube.com/watch?v=${video.key}`,
+                              youtubeUtils.getWatchUrl(video.key),
                               "_blank"
                             )
                           }

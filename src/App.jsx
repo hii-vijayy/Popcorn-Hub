@@ -8,21 +8,18 @@ import {
 import { AppProvider } from "./context/AppContext";
 import HomePage from "./pages/HomePage";
 import Navbar from "./Components/NavBar";
-import SearchPage from "./pages/SearchPage";
 import MoviesPage from "./pages/MoviesPage";
 import TVShowsPage from "./pages/TVShowsPage";
 import TrendingPage from "./pages/TrendingPage";
 import MovieDetailsCard from "./components/MovieDetailsCard";
 import Footer from "./components/Footer";
 import "./styles/globals.css";
-
 function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedContent, setSelectedContent] = useState({
     id: null,
     type: "movie",
   });
-
   const handleContentClick = (contentId, contentType) => {
     console.log("=== App handleContentClick Debug ===");
     console.log("Received:", {
@@ -30,7 +27,6 @@ function App() {
       contentType,
       type: typeof contentId,
     });
-
     // Validate inputs more strictly
     if (
       !contentId ||
@@ -46,44 +42,33 @@ function App() {
       );
       return;
     }
-
     // Convert to string and validate format
     const validId = String(contentId).trim();
     if (!/^\d+$/.test(validId)) {
       console.error("Content ID is not a valid number:", validId);
       return;
     }
-
     // Ensure contentType is valid
     const validContentType = contentType === "tv" ? "tv" : "movie";
-
     console.log("Opening modal with:", { id: validId, type: validContentType });
     console.log("=== End App Debug ===");
-
     setSelectedContent({ id: validId, type: validContentType });
     setModalOpen(true);
   };
-
   const handleCloseModal = () => {
     setModalOpen(false);
     setSelectedContent({ id: null, type: "movie" });
   };
-
   return (
     <AppProvider>
       <Router>
         <div className="app">
           <Navbar />
-
           <main className="main-content">
             <Routes>
               <Route
                 path="/"
                 element={<HomePage onContentClick={handleContentClick} />}
-              />
-              <Route
-                path="/search"
-                element={<SearchPage onContentClick={handleContentClick} />}
               />
               <Route
                 path="/movies"
@@ -100,9 +85,7 @@ function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
-
           <Footer />
-
           {modalOpen && (
             <MovieDetailsCard
               contentId={selectedContent.id}
@@ -116,5 +99,4 @@ function App() {
     </AppProvider>
   );
 }
-
 export default App;

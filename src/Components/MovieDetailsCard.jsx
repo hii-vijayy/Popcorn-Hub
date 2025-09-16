@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { tmdbService, imageUtils, tmdbUtils } from "../services/tmdbService";
+import {
+  tmdbService,
+  imageUtils,
+  tmdbUtils,
+  youtubeUtils,
+} from "../services/tmdbService";
 import "./MovieDetailsCard.css";
 
 const MovieDetailsCard = ({
@@ -263,7 +268,7 @@ const MovieDetailsCard = ({
                   <h3>Trailer</h3>
                   <div className="trailer-compact">
                     <iframe
-                      src={`https://www.youtube.com/embed/${trailer.key}`}
+                      src={youtubeUtils.getEmbedUrl(trailer.key)}
                       title={trailer.name}
                       frameBorder="0"
                       allowFullScreen

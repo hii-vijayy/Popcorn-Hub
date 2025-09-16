@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { tmdbService, mockData } from "../services/tmdbService";
-
 // Initial state
 const initialState = {
   // Movies
@@ -8,17 +7,14 @@ const initialState = {
   trendingMovies: [],
   topRatedMovies: [],
   upcomingMovies: [],
-
   // TV Shows
   popularTVShows: [],
   trendingTVShows: [],
   topRatedTVShows: [],
-
   // Search
   searchResults: [],
   searchQuery: "",
   searchType: "multi", // 'multi', 'movie', 'tv'
-
   // UI State
   loading: {
     popularMovies: false,
@@ -31,24 +27,19 @@ const initialState = {
     search: false,
     details: false,
   },
-
   // Modal and detail state
   selectedContent: null,
   contentType: "movie", // 'movie' or 'tv'
-
   // Filters and preferences
   genres: {
     movies: [],
     tv: [],
   },
-
   // Error handling
   errors: {},
-
   // Configuration
   imageConfig: null,
 };
-
 // Action types
 const actionTypes = {
   SET_LOADING: "SET_LOADING",
@@ -75,7 +66,6 @@ const actionTypes = {
   SET_IMAGE_CONFIG: "SET_IMAGE_CONFIG",
   CLEAR_SEARCH: "CLEAR_SEARCH",
 };
-
 // Reducer
 function appReducer(state, action) {
   switch (action.type) {
@@ -87,110 +77,92 @@ function appReducer(state, action) {
           [action.payload.key]: action.payload.value,
         },
       };
-
     case actionTypes.SET_POPULAR_MOVIES:
       return {
         ...state,
         popularMovies: action.payload,
       };
-
     case actionTypes.SET_TRENDING_MOVIES:
       return {
         ...state,
         trendingMovies: action.payload,
       };
-
     case actionTypes.SET_TOP_RATED_MOVIES:
       return {
         ...state,
         topRatedMovies: action.payload,
       };
-
     case actionTypes.SET_UPCOMING_MOVIES:
       return {
         ...state,
         upcomingMovies: action.payload,
       };
-
     case actionTypes.SET_POPULAR_TV_SHOWS:
       return {
         ...state,
         popularTVShows: action.payload,
       };
-
     case actionTypes.SET_TRENDING_TV_SHOWS:
       return {
         ...state,
         trendingTVShows: action.payload,
       };
-
     case actionTypes.SET_TOP_RATED_TV_SHOWS:
       return {
         ...state,
         topRatedTVShows: action.payload,
       };
-
     // Append cases for pagination
     case actionTypes.APPEND_POPULAR_MOVIES:
       return {
         ...state,
         popularMovies: [...state.popularMovies, ...action.payload],
       };
-
     case actionTypes.APPEND_TRENDING_MOVIES:
       return {
         ...state,
         trendingMovies: [...state.trendingMovies, ...action.payload],
       };
-
     case actionTypes.APPEND_TOP_RATED_MOVIES:
       return {
         ...state,
         topRatedMovies: [...state.topRatedMovies, ...action.payload],
       };
-
     case actionTypes.APPEND_UPCOMING_MOVIES:
       return {
         ...state,
         upcomingMovies: [...state.upcomingMovies, ...action.payload],
       };
-
     case actionTypes.APPEND_POPULAR_TV_SHOWS:
       return {
         ...state,
         popularTVShows: [...state.popularTVShows, ...action.payload],
       };
-
     case actionTypes.SET_SEARCH_RESULTS:
       return {
         ...state,
         searchResults: action.payload,
       };
-
     case actionTypes.SET_SEARCH_QUERY:
       return {
         ...state,
         searchQuery: action.payload,
       };
-
     case actionTypes.SET_SEARCH_TYPE:
       return {
         ...state,
         searchType: action.payload,
       };
-
     case actionTypes.SET_SELECTED_CONTENT:
       return {
         ...state,
         selectedContent: action.payload,
       };
-
     case actionTypes.SET_CONTENT_TYPE:
       return {
         ...state,
         contentType: action.payload,
       };
-
     case actionTypes.SET_GENRES:
       return {
         ...state,
@@ -199,7 +171,6 @@ function appReducer(state, action) {
           [action.payload.type]: action.payload.genres,
         },
       };
-
     case actionTypes.SET_ERROR:
       return {
         ...state,
@@ -208,39 +179,32 @@ function appReducer(state, action) {
           [action.payload.key]: action.payload.error,
         },
       };
-
     case actionTypes.CLEAR_ERROR:
       const { [action.payload]: removed, ...remainingErrors } = state.errors;
       return {
         ...state,
         errors: remainingErrors,
       };
-
     case actionTypes.SET_IMAGE_CONFIG:
       return {
         ...state,
         imageConfig: action.payload,
       };
-
     case actionTypes.CLEAR_SEARCH:
       return {
         ...state,
         searchResults: [],
         searchQuery: "",
       };
-
     default:
       return state;
   }
 }
-
 // Create context
 const AppContext = createContext();
-
 // Provider component
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
-
   // Action creators
   const actions = {
     setLoading: (key, value) => {
@@ -249,7 +213,6 @@ export function AppProvider({ children }) {
         payload: { key, value },
       });
     },
-
     fetchPopularMovies: async () => {
       try {
         actions.setLoading("popularMovies", true);
@@ -270,7 +233,6 @@ export function AppProvider({ children }) {
         actions.setLoading("popularMovies", false);
       }
     },
-
     fetchTrendingMovies: async () => {
       try {
         actions.setLoading("trendingMovies", true);
@@ -290,7 +252,6 @@ export function AppProvider({ children }) {
         actions.setLoading("trendingMovies", false);
       }
     },
-
     fetchTopRatedMovies: async () => {
       try {
         actions.setLoading("topRatedMovies", true);
@@ -310,7 +271,6 @@ export function AppProvider({ children }) {
         actions.setLoading("topRatedMovies", false);
       }
     },
-
     fetchUpcomingMovies: async () => {
       try {
         actions.setLoading("upcomingMovies", true);
@@ -330,7 +290,6 @@ export function AppProvider({ children }) {
         actions.setLoading("upcomingMovies", false);
       }
     },
-
     fetchPopularTVShows: async () => {
       try {
         actions.setLoading("popularTVShows", true);
@@ -350,7 +309,6 @@ export function AppProvider({ children }) {
         actions.setLoading("popularTVShows", false);
       }
     },
-
     // Pagination-enabled fetch functions (append new data)
     fetchMorePopularMovies: async (page = 2) => {
       try {
@@ -365,7 +323,6 @@ export function AppProvider({ children }) {
         throw error; // Throw error so component can handle it
       }
     },
-
     fetchMoreTrendingMovies: async (page = 2) => {
       try {
         const response = await tmdbService.getTrendingMovies("week", page);
@@ -379,7 +336,6 @@ export function AppProvider({ children }) {
         throw error; // Throw error so component can handle it
       }
     },
-
     fetchMoreTopRatedMovies: async (page = 2) => {
       try {
         const response = await tmdbService.getTopRatedMovies(page);
@@ -393,7 +349,6 @@ export function AppProvider({ children }) {
         throw error; // Throw error so component can handle it
       }
     },
-
     fetchMoreUpcomingMovies: async (page = 2) => {
       try {
         const response = await tmdbService.getUpcomingMovies(page);
@@ -407,7 +362,6 @@ export function AppProvider({ children }) {
         throw error; // Throw error so component can handle it
       }
     },
-
     fetchMorePopularTVShows: async (page = 2) => {
       try {
         const response = await tmdbService.getPopularTVShows(page);
@@ -421,15 +375,12 @@ export function AppProvider({ children }) {
         throw error; // Throw error so component can handle it
       }
     },
-
     search: async (query, type = "multi") => {
       if (!query.trim()) return;
-
       try {
         actions.setLoading("search", true);
         dispatch({ type: actionTypes.SET_SEARCH_QUERY, payload: query });
         dispatch({ type: actionTypes.SET_SEARCH_TYPE, payload: type });
-
         let response;
         switch (type) {
           case "movie":
@@ -441,7 +392,6 @@ export function AppProvider({ children }) {
           default:
             response = await tmdbService.searchMulti(query);
         }
-
         dispatch({
           type: actionTypes.SET_SEARCH_RESULTS,
           payload: response.data.results,
@@ -453,37 +403,31 @@ export function AppProvider({ children }) {
         actions.setLoading("search", false);
       }
     },
-
     clearSearch: () => {
       dispatch({ type: actionTypes.CLEAR_SEARCH });
     },
-
     setSelectedContent: (content) => {
       dispatch({
         type: actionTypes.SET_SELECTED_CONTENT,
         payload: content,
       });
     },
-
     setContentType: (type) => {
       dispatch({
         type: actionTypes.SET_CONTENT_TYPE,
         payload: type,
       });
     },
-
     fetchGenres: async () => {
       try {
         const [movieGenres, tvGenres] = await Promise.all([
           tmdbService.getMovieGenres(),
           tmdbService.getTVGenres(),
         ]);
-
         dispatch({
           type: actionTypes.SET_GENRES,
           payload: { type: "movies", genres: movieGenres.data.genres },
         });
-
         dispatch({
           type: actionTypes.SET_GENRES,
           payload: { type: "tv", genres: tvGenres.data.genres },
@@ -493,14 +437,12 @@ export function AppProvider({ children }) {
         actions.setError("genres", error.message);
       }
     },
-
     setError: (key, error) => {
       dispatch({
         type: actionTypes.SET_ERROR,
         payload: { key, error },
       });
     },
-
     clearError: (key) => {
       dispatch({
         type: actionTypes.CLEAR_ERROR,
@@ -508,24 +450,20 @@ export function AppProvider({ children }) {
       });
     },
   };
-
   // Initialize data on mount
   useEffect(() => {
     actions.fetchPopularMovies();
     actions.fetchTrendingMovies();
     actions.fetchGenres();
   }, []);
-
   const contextValue = {
     ...state,
     actions,
   };
-
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
 }
-
 // Custom hook to use the context
 export function useAppContext() {
   const context = useContext(AppContext);
@@ -534,5 +472,4 @@ export function useAppContext() {
   }
   return context;
 }
-
 export default AppContext;

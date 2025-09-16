@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
-import ContentGrid, { TrendingGrid } from "../components/ContentGrid";
+import ContentGrid, { TrendingGrid } from "../Components/ContentGrid";
 import { ArrowLeft } from "lucide-react";
 import "./HomePage.css";
 const HomePage = ({ onContentClick }) => {

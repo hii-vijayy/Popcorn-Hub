@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useAppContext } from "../context/AppContext";
-import ContentGrid from "../components/ContentGrid";
+import ContentGrid from "../Components/ContentGrid";
 import "./TrendingPage.css";
 
 const TrendingPage = ({ onContentClick }) => {

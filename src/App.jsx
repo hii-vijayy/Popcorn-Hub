@@ -11,8 +11,8 @@ import Navbar from "./Components/Navbar";
 import MoviesPage from "./pages/MoviesPage";
 import TVShowsPage from "./pages/TVShowsPage";
 import TrendingPage from "./pages/TrendingPage";
-import MovieDetailsCard from "./components/MovieDetailsCard";
-import Footer from "./components/Footer";
+import MovieDetailsCard from "./Components/MovieDetailsCard";
+import Footer from "./Components/Footer";
 import "./styles/globals.css";
 function App() {
   const [modalOpen, setModalOpen] = useState(false);

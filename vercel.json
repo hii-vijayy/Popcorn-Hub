@@ -22,7 +22,7 @@
     }
   ],
   "env": {
-    "VITE_TMDB_API_KEY": "@tmdb_api_key",
+    "VITE_TMDB_API_KEY": "8265bd1679663a7ea12ac168da84d2e8",
     "VITE_TMDB_BASE_URL": "https://api.themoviedb.org/3",
     "VITE_TMDB_IMAGE_BASE_URL": "https://image.tmdb.org/t/p",
     "VITE_YOUTUBE_WATCH_BASE_URL": "https://www.youtube.com/watch",
@@ -31,7 +31,7 @@
   },
   "build": {
     "env": {
-      "VITE_TMDB_API_KEY": "@tmdb_api_key"
+      "VITE_TMDB_API_KEY": "8265bd1679663a7ea12ac168da84d2e8"
     }
   }
 }
